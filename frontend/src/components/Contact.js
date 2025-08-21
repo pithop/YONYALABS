@@ -56,7 +56,7 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-slate-50 p-8 md:p-12 rounded-lg border border-slate-200">
           <div>
             <h3 className="text-2xl font-semibold text-slate-900 mb-8">
-              Mes coordonnées
+            Nos coordonnées
             </h3>
             <div className="space-y-6">
               <div className="flex items-center">
@@ -81,7 +81,7 @@ const Contact = () => {
           
           <div>
             <h3 className="text-2xl font-semibold text-slate-900 mb-8">
-              Envoyez-moi un message
+              Envoyez-nous un message
             </h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
