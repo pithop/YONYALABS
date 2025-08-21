@@ -8,7 +8,7 @@
   text-align: left;
 }
 
-/* Navigation link hover effects */
+/* Effet de survol pour les liens de navigation */
 .nav-link {
   position: relative;
 }
@@ -20,7 +20,7 @@
   height: 2px;
   bottom: -4px;
   left: 50%;
-  background-color: #f97316;
+  background-color: #f97316; /* Orange */
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
@@ -29,7 +29,7 @@
   width: 100%;
 }
 
-/* CTA Button hover effects */
+/* Effet de survol pour le bouton d'appel à l'action */
 .cta-button {
   position: relative;
   overflow: hidden;
@@ -55,47 +55,23 @@
   left: 100%;
 }
 
-/* Service card hover effects */
-.service-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.service-card:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Smooth scrolling */
+/* Défilement fluide */
 html {
   scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
-button:focus,
-input:focus,
-textarea:focus {
+/* Styles de focus pour l'accessibilité */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
   outline: 2px solid #f97316;
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
 
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Animation for mobile menu */
+/* Animation pour le menu mobile */
 @keyframes slideDown {
   from {
     opacity: 0;
