@@ -21,7 +21,7 @@ const Services = () => {
     },
     {
       title: "Sites complets",
-      price: "(500€)",
+      price: "(À partir de 500€)",
       icon: <ShoppingCart className="w-8 h-8 text-orange-500" />,
       features: [
         "Back-office simple pour gérer vos menus",
