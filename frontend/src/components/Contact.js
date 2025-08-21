@@ -8,7 +8,7 @@ const Contact = () => {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const email = "senuoy122@gmail.com";
+    const email = "34yonya@gmail.com";
 
     const handleCopyEmail = () => {
         navigator.clipboard.writeText(email);
@@ -24,7 +24,7 @@ const Contact = () => {
         setIsSubmitting(true);
         
         try {
-            const response = await fetch("https://formspree.io/f/mvgqjnyd", {
+            const response = await fetch("https://formspree.io/f/xwpqdgje", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
