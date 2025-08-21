@@ -4,46 +4,49 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 const demos = [
   // IMPORTANT: Remplacez ces URLs par les URLs de vos propres captures d'écran.
   // Vous pouvez utiliser un service comme https://cloudinary.com/ pour héberger vos images gratuitement.
-  { name: "Atipico", url: "https://atipico-five.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770217/Screenshot_from_2025-08-21_11-50-55_g6kt7n.png" },
-  { name: "L'Indya", url: "https://l-indya.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770217/Screenshot_from_2025-08-21_11-51-01_wzlhz6.png" },
-  { name: "A la Braise", url: "https://alabraise.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770217/Screenshot_from_2025-08-21_11-51-07_cccnrc.png" },
-  { name: "La Pizzaterie", url: "https://lapizzaterie.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770217/Screenshot_from_2025-08-21_11-51-13_qxrqjn.png" },
-  { name: "Le P'tit Thaï", url: "https://leptitthai.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770217/Screenshot_from_2025-08-21_11-51-19_ouwjwg.png" }
+  { name: "Atipico", url: "https://atipico-five.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755771000/screencapture-atipico-five-vercel-app-2025-08-21-12_08_10_m4zamo.png" },
+  { name: "L'Indya", url: "https://l-indya.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-l-indya-vercel-app-2025-08-21-12_08_32_lkbaie.png" },
+  { name: "A la Braise", url: "https://alabraise.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-alabraise-vercel-app-2025-08-21-12_08_46_gc5o72.png" },
+  { name: "La Pizzaterie", url: "https://lapizzaterie.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-lapizzaterie-vercel-app-2025-08-21-12_08_58_rq9dpg.png" },
+  { name: "Le P'tit Thaï", url: "https://leptitthai.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770998/screencapture-leptitthai-vercel-app-2025-08-21-12_09_10_gnk0ja.png" }
 ];
 
 const Portfolio = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
-
-  return (
-    <section
-      id="portfolio"
-      ref={ref}
-      className={`py-20 bg-white transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 text-center mb-16">
-          Nos dernières réalisations
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {demos.map((demo, index) => (
-            <a key={index} href={demo.url} target="_blank" rel="noopener noreferrer"
-              className="group block rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="relative overflow-hidden">
-                <img src={demo.imageUrl} alt={`Capture d'écran du site ${demo.name}`}
-                  className="w-full h-48 object-cover object-top transform group-hover:scale-110 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300"></div>
-              </div>
-              <div className="p-4 bg-white">
-                <h3 className="text-lg font-semibold text-slate-800 group-hover:text-orange-500 transition-colors duration-300">
-                  {demo.name}
-                </h3>
-              </div>
-            </a>
-          ))}
+    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
+  
+    return (
+      <section id="portfolio" ref={ref} className={`py-24 bg-white transition-all duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Nos réalisations</h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto">Chaque site est unique, conçu pour refléter l'identité du restaurant et optimiser l'expérience client.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {demos.map((demo, index) => (
+              <a 
+                key={index} 
+                href={demo.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200"
+              >
+                <div className="relative overflow-hidden aspect-video bg-slate-100">
+                  <div 
+                      className="portfolio-preview"
+                      style={{ backgroundImage: `url(${demo.imageUrl})` }}
+                  ></div>
+                </div>
+                <div className="p-6 bg-white">
+                  <h3 className="text-xl font-semibold text-slate-800 group-hover:text-orange-500 transition-colors duration-300">
+                    {demo.name}
+                  </h3>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  );
-};
-
-export default Portfolio;
+      </section>
+    );
+  };
+  
+  export default Portfolio;
