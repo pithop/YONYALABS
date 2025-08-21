@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast'; // Importer le Toaster
 import "./App.css";
+import { Analytics } from "@vercel/analytics/react"
 import Home from "./pages/Home";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<Home />} />
         </Routes>
       </BrowserRouter>
+      <Analytics />
     </div>
   );
 }
