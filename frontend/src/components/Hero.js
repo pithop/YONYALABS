@@ -1,8 +1,7 @@
-// src/components/Hero.js
-
+// frontend/src/components/Hero.js
 import React from 'react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react'; // On importe ArrowRight
 
 const Hero = () => {
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.3 });
@@ -13,6 +12,7 @@ const Hero = () => {
             ref={ref}
             className="relative flex items-center justify-center h-screen bg-slate-900 text-white overflow-hidden"
         >
+            {/* ... le fond animé ne change pas ... */}
             <div className="absolute inset-0 z-0 opacity-20">
                 <div className="absolute bottom-0 left-[-20%] right-[-20%] top-[-20%] h-[140%] w-[140%] bg-gradient-to-br from-orange-500/50 via-slate-900 to-slate-900 animate-gradient-xy"></div>
             </div>
@@ -29,9 +29,11 @@ const Hero = () => {
                 </p>
                 <a 
                     href="#services" 
-                    className="inline-flex items-center bg-orange-500 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30"
+                    className="group inline-flex items-center bg-orange-500 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30"
                 >
                     Découvrir nos solutions
+                    {/* AJOUT DE L'ICÔNE ANIMÉE */}
+                    <ArrowRight className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
                 </a>
             </div>
 

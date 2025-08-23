@@ -1,3 +1,5 @@
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
@@ -54,6 +56,9 @@ module.exports = {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+		  fontFamily: {
+			sans: ["Inter", ...fontFamily.sans],
+		  },
   		keyframes: {
   			'accordion-down': {
   				from: {

@@ -12,10 +12,17 @@ function App() {
       <Toaster 
         position="bottom-right"
         toastOptions={{
-          duration: 5000,
-          style: {
-            background: '#333',
-            color: '#fff',
+          success: {
+            style: {
+              background: '#22c55e',
+              color: 'white',
+            },
+          },
+          error: {
+            style: {
+              background: '#ef4444',
+              color: 'white',
+            },
           },
         }}
       />
