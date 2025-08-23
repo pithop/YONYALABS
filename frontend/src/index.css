@@ -95,17 +95,51 @@ code {
   }
   .animate-gradient-xy { animation: gradient-xy 15s ease infinite; }
 }
-/* Effet de prévisualisation du Portfolio */
 .portfolio-preview {
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: 0% 0%; /* Position de départ : en haut */
+  background-position: 0% 0%;
   background-repeat: no-repeat;
-  transition: background-position 7s ease-in-out; /* <-- MODIFIEZ LA VITESSE ICI */
+  transition: background-position 7s ease-in-out;
 }
 
-/* Quand on survole le lien parent (qui a la classe 'group'), on anime la position du fond */
-.group:hover .portfolio-preview {
-  background-position: 0% 100%; /* Position de fin : en bas */
+.custom-carousel-wrapper {
+  padding-bottom: 40px; 
+  position: relative;
+}
+
+/* Positionnement du conteneur des points */
+.carousel .control-dots {
+  position: absolute !important;
+  /* On le positionne en bas, à l'extérieur de l'image */
+  bottom: 0 !important; 
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+  width: 100%;
+}
+
+/* Style des indicateurs en points */
+.custom-indicator {
+  background: #cbd5e1; /* slate-300 */
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Style du point actif (sélectionné) */
+.custom-indicator.selected {
+  background: #f97316; /* orange-500 */
+  transform: scale(1.25);
+  cursor: default;
+}
+
+/* Style au survol pour les points inactifs */
+.custom-indicator:hover {
+  background: #94a3b8; /* slate-400 */
 }
