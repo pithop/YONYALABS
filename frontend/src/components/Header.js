@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,6 +14,11 @@ const Header = () => {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -61,6 +67,7 @@ const Header = () => {
         )}
       </div>
     </header>
+    </>
   );
 };
 

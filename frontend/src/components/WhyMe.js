@@ -2,6 +2,7 @@
 import React from 'react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { Gem, Zap, Users, ShieldCheck } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const features = [
   { icon: <Gem className="w-10 h-10" />, title: "Design sur Mesure & Premium", description: "Nous créons des expériences digitales uniques qui captivent vos clients et incarnent l'âme de votre restaurant." },
@@ -14,6 +15,11 @@ const WhyMe = () => {
   const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <section id="whyme" ref={ref} className="py-20 sm:py-28 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center mb-16">
@@ -44,6 +50,7 @@ const WhyMe = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

@@ -5,7 +5,8 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import {contactInfo} from '../config';
 import { useForm, ValidationError } from '@formspree/react'; // <-- Nouvel import
-import toast from 'react-hot-toast'; // <-- Nouvel import
+import toast from 'react-hot-toast';
+import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
@@ -20,6 +21,10 @@ const Contact = () => {
     }, [state.succeeded]);
 
     return (
+        <><Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
         <section 
             id="contact" 
             ref={ref}
@@ -87,6 +92,7 @@ const Contact = () => {
                 </div>
             </div>
         </section>
+        </>
     );
 };
 

@@ -2,11 +2,17 @@
 import React from 'react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { ArrowDown, ArrowRight } from 'lucide-react'; // On importe ArrowRight
+import { Helmet } from 'react-helmet-async';
 
 const Hero = () => {
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.3 });
 
     return (
+        <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
         <section 
             id="home" 
             ref={ref}
@@ -41,6 +47,7 @@ const Hero = () => {
                 <ArrowDown className="w-8 h-8 text-slate-500" />
             </div>
         </section>
+        </>
     );
 };
 

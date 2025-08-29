@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { LayoutTemplate, ShoppingCart, Codepen, Check, ArrowRight, Star } from 'lucide-react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import { Helmet } from 'react-helmet-async';
 
 const servicesData = {
   "Pack Complet": {
@@ -59,6 +60,11 @@ const Services = () => {
   const ServiceContent = servicesData[activeService];
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <section 
       id="services" 
       ref={ref} 
@@ -153,6 +159,7 @@ const Services = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

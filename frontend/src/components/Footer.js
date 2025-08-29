@@ -3,11 +3,16 @@
 import React from 'react';
 import { Mail, Phone } from 'lucide-react';
 import { contactInfo } from '../config';
-
+import { Helmet } from 'react-helmet-async';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <footer className="bg-slate-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -57,6 +62,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

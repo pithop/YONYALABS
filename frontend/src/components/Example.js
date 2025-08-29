@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import { Helmet } from 'react-helmet-async';
 
 const MetricCircle = ({ finalValue, label, isVisible }) => {
   // ... (le code du MetricCircle reste le même)
@@ -69,6 +70,11 @@ const Example = () => {
   const afterMetrics = { performance: 98, accessibility: 100, seo: 100 };
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <section 
       id="example" ref={ref}
       className={`py-20 sm:py-28 bg-slate-900 overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
@@ -110,6 +116,7 @@ const Example = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { ExternalLink } from 'lucide-react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import { Helmet } from 'react-helmet-async';
 
 const demos = [
   { name: "Atipico",category: "Site Vitrine", url: "https://atipico-five.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755771000/screencapture-atipico-five-vercel-app-2025-08-21-12_08_10_m4zamo.png" },
@@ -17,6 +18,11 @@ const Portfolio = () => {
   const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
 
   return (
+    <>
+      <Helmet>
+        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
+        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
+      </Helmet>
     <section 
       id="portfolio" 
       ref={ref}
@@ -79,6 +85,7 @@ const Portfolio = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
