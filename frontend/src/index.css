@@ -2,22 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-        monospace;
-}
-
-
-
 @layer base {
   :root {
     /* Nouvelle Palette YonYa Labs */
@@ -50,28 +34,21 @@ code {
   }
 
   .dark {
-    /* Nous pourrions définir un thème sombre plus tard si nécessaire */
+    /* Thème sombre (prêt pour plus tard) */
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
-
     --card: 224 71.4% 4.1%;
     --card-foreground: 210 20% 98%;
-
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
-
     --primary: 210 20% 98%;
     --primary-foreground: 224 71.4% 4.1%;
-
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
-
     --accent: 38 92% 50%;
     --accent-foreground: 224 71.4% 4.1%;
-
     --muted: 215 27.9% 16.9%;
     --muted-foreground: 210 20% 98%;
-    
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 38 92% 50%;
@@ -86,35 +63,15 @@ code {
     @apply bg-background text-foreground;
   }
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@layer utilities {
-  @keyframes gradient-xy {
-      0%, 100% { background-size: 400% 400%; background-position: top center; }
-      50% { background-size: 200% 200%; background-position: bottom center; }
-  }
-  .animate-gradient-xy { animation: gradient-xy 15s ease infinite; }
-}
-.portfolio-preview {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: 0% 0%;
-  background-repeat: no-repeat;
-  transition: background-position 7s ease-in-out;
-}
 
+/* Styles pour le Carrousel (mis à jour avec nos variables) */
 .custom-carousel-wrapper {
   padding-bottom: 40px; 
   position: relative;
 }
 
-/* Positionnement du conteneur des points */
 .carousel .control-dots {
   position: absolute !important;
-  /* On le positionne en bas, à l'extérieur de l'image */
   bottom: 0 !important; 
   margin: 0 !important;
   padding: 0 !important;
@@ -122,9 +79,9 @@ code {
   width: 100%;
 }
 
-/* Style des indicateurs en points */
 .custom-indicator {
-  background: #cbd5e1; /* slate-300 */
+  /* MODIFIÉ: On utilise la variable de couleur pour les bordures/éléments discrets */
+  background: hsl(var(--border)); 
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -134,14 +91,14 @@ code {
   transition: all 0.2s ease-in-out;
 }
 
-/* Style du point actif (sélectionné) */
 .custom-indicator.selected {
-  background: #f97316; /* orange-500 */
+  /* MODIFIÉ: On utilise la couleur accent pour l'élément actif */
+  background: hsl(var(--accent)); 
   transform: scale(1.25);
   cursor: default;
 }
 
-/* Style au survol pour les points inactifs */
 .custom-indicator:hover {
-  background: #94a3b8; /* slate-400 */
+  /* MODIFIÉ: On utilise une version plus foncée de la couleur muted */
+  background: hsl(var(--muted-foreground)); 
 }

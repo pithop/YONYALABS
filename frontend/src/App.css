@@ -1,17 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 body {
+  /* La police est déjà définie par Tailwind, mais garder ceci assure la cohérence */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc; /* bg-slate-50 */
+  /* SUPPRIMÉ: la couleur de fond est maintenant gérée par la classe .bg-background de Tailwind dans index.css */
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Effet de survol pour les liens de navigation */
+/* Effet de survol pour les liens de navigation qui utilise notre couleur d'accent */
 .nav-link {
   position: relative;
 }
@@ -23,21 +24,23 @@ html {
   bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #f97316; /* Orange-500 */
+  /* MODIFIÉ: On utilise la variable de la couleur accent */
+  background-color: hsl(var(--accent)); 
   transition: width 0.3s ease-in-out;
 }
 .nav-link:hover::after {
   width: 100%;
 }
 
-/* Styles de focus pour l'accessibilité */
+/* Styles de focus pour l'accessibilité utilisant notre couleur "ring" */
 :focus-visible {
-  outline: 3px solid #fb923c; /* Orange-400 */
+  /* MODIFIÉ: On utilise la variable de la couleur ring (l'anneau de focus) */
+  outline: 3px solid hsl(var(--ring)); 
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* Animation pour le menu mobile */
+/* Animation pour le menu mobile (inchangé) */
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -46,7 +49,7 @@ html {
   animation: slideDown 0.3s ease-out;
 }
 
-/* Nouvel effet de prévisualisation du Portfolio */
+/* Effet de prévisualisation du Portfolio (inchangé) */
 .portfolio-preview {
     width: 100%;
     height: 100%;
