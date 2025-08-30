@@ -1,69 +1,30 @@
-// frontend/src/components/Footer.js
-
 import React from 'react';
-import { Mail, Phone } from 'lucide-react';
-import { contactInfo } from '../config';
-import { Helmet } from 'react-helmet-async';
+// MODIFIÉ : L'icône Github a été retirée de l'import
+import { Linkedin, Mail } from 'lucide-react';
+import logo from '../assets/logo-white.png';
+
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  return (
-    <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-    <footer className="bg-slate-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Section Logo & Mission */}
-          <div className="md:col-span-1">
-            <h2 className="text-2xl font-bold mb-2">YonYa Labs</h2>
-            <p className="text-slate-400 max-w-xs">
-              L'excellence digitale au service des restaurateurs passionnés.
-            </p>
-          </div>
-          
-          {/* Section Navigation */}
-          <div>
-            <h3 className="font-semibold text-slate-200 tracking-wider uppercase mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              <li><a href="#services" className="text-slate-400 hover:text-orange-400 transition-colors">Nos Services</a></li>
-              <li><a href="#portfolio" className="text-slate-400 hover:text-orange-400 transition-colors">Portfolio</a></li>
-              <li><a href="#whyme" className="text-slate-400 hover:text-orange-400 transition-colors">Pourquoi Nous ?</a></li>
-              <li><a href="#contact" className="text-slate-400 hover:text-orange-400 transition-colors">Contact</a></li>
-            </ul>
-          </div>
-
-          {/* Section Contact */}
-          <div>
-            <h3 className="font-semibold text-slate-200 tracking-wider uppercase mb-4">Contact</h3>
-            <ul className="space-y-3 text-slate-400">
-                <li className="flex items-center">
-                    <Mail className="w-5 h-5 mr-3 text-orange-400" />
-                    {/* Utilisation de la variable email */}
-                    <a href={`mailto:${contactInfo.email}`} className="hover:text-orange-400 transition-colors">
-                        {contactInfo.email}
-                    </a>
-                </li>
-                <li className="flex items-center">
-                    <Phone className="w-5 h-5 mr-3 text-orange-400" />
-                    {/* Utilisation de la variable phone */}
-                    <span>{contactInfo.phone}</span>
-                </li>
-            </ul>
-          </div>
-          
-        </div>
-        
-        <div className="mt-12 pt-8 border-t border-slate-800 text-center text-slate-500">
-          <p>&copy; {currentYear} YonYa Labs. Tous droits réservés.</p>
-        </div>
-      </div>
-    </footer>
-    </>
-  );
+    return (
+        <footer className="bg-primary text-primary-foreground">
+            <div className="container mx-auto px-4 py-8">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                    <div className="mb-4 md:mb-0">
+                        <img className="h-10 w-auto" src={logo} alt="YonYa Labs Logo" />
+                        <p className="text-sm mt-2 text-primary-foreground/60">© {new Date().getFullYear()} YonYa Labs. Tous droits réservés.</p>
+                    </div>
+                    <div className="flex space-x-4">
+                        {/* SUPPRIMÉ : Le lien vers GitHub a été retiré */}
+                        <a href="https://www.linkedin.com/in/yonya-labs-7864a9381/" target="_blank" rel="noopener noreferrer" className="text-primary-foreground hover:text-accent transition-colors">
+                            <Linkedin size={24} />
+                        </a>
+                        <a href="mailto:contact@yonyalabs.com" className="text-primary-foreground hover:text-accent transition-colors">
+                            <Mail size={24} />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

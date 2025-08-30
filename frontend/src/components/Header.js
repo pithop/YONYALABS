@@ -1,74 +1,80 @@
-import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { Helmet } from 'react-helmet-async';
+import React, { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMenuOpen(false);
-  };
+    const navLinks = [
+        { href: '#services', text: 'Services' },
+        { href: '#portfolio', text: 'Portfolio' },
+        { href: '#example', text: 'Exemple Concret' },
+        { href: '#why-me', text: 'Pourquoi Nous' },
+    ];
 
-  return (
-    <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
-            <a href="/" className="text-2xl font-bold text-slate-900">YonYa Labs</a>
-          </div>
-          <nav className="hidden md:flex space-x-8">
-            <button onClick={() => scrollToSection("services")} className="nav-link text-slate-600 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Services
-            </button>
-            <button onClick={() => scrollToSection("portfolio")} className="nav-link text-slate-600 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Réalisations
-            </button>
-            <button onClick={() => scrollToSection("contact")} className="nav-link text-slate-600 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Contact
-            </button>
-          </nav>
-          <div className="hidden md:block">
-            <button onClick={() => scrollToSection("contact")} className="cta-button bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-orange-600 transition-all duration-200 transform hover:-translate-y-0.5">
-              Demander un devis
-            </button>
-          </div>
-          <div className="md:hidden">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600 hover:text-slate-900 focus:outline-none focus:text-slate-900">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-        {isMenuOpen && (
-          <div className="md:hidden mobile-menu">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-slate-200">
-              <button onClick={() => scrollToSection("services")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50">
-                Services
-              </button>
-              <button onClick={() => scrollToSection("portfolio")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50">
-                Réalisations
-              </button>
-              <button onClick={() => scrollToSection("contact")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50">
-                Contact
-              </button>
-              <button onClick={() => scrollToSection("contact")} className="w-full mt-4 bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-orange-600">
-                Demander un devis
-              </button>
+    return (
+        // MODIFIÉ : Fond transparent (hérite de background), ombre subtile
+        <header className="bg-background/80 sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur-lg">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                    <a href="#hero" className="flex-shrink-0">
+                        <img className="h-10 w-auto" src={logo} alt="YonYa Labs Logo" />
+                    </a>
+                    <div className="hidden md:block">
+                        <nav className="flex items-center space-x-8">
+                            {navLinks.map((link) => (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    // MODIFIÉ : Couleur de texte principale et couleur d'accent au survol
+                                    className="nav-link font-medium text-foreground/80 hover:text-accent transition-colors"
+                                >
+                                    {link.text}
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+                    <div className="hidden md:block">
+                         <a href="#contact" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-accent text-accent-foreground hover:bg-accent/90 h-9 rounded-md">
+                            Nous Contacter
+                        </a>
+                    </div>
+                    <div className="md:hidden">
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            // MODIFIÉ : Couleur du bouton mobile
+                            className="inline-flex items-center justify-center p-2 rounded-md text-foreground/80 hover:text-accent focus:outline-none"
+                        >
+                            {isOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
-        )}
-      </div>
-    </header>
-    </>
-  );
+            {isOpen && (
+                // MODIFIÉ : Fond du menu mobile
+                <div className="md:hidden mobile-menu border-t border-border/40 bg-background">
+                    <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                // MODIFIÉ : Couleurs des liens mobiles
+                                className="block px-3 py-2 rounded-md text-base font-medium text-foreground/80 hover:bg-secondary hover:text-secondary-foreground"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {link.text}
+                            </a>
+                        ))}
+                    </nav>
+                    <div className="px-4 pb-4">
+                        <a href="#contact" className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-accent text-accent-foreground hover:bg-accent/90 h-9 rounded-md">
+                           Nous Contacter
+                        </a>
+                    </div>
+                </div>
+            )}
+        </header>
+    );
 };
 
 export default Header;

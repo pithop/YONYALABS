@@ -1,53 +1,46 @@
-// frontend/src/components/Hero.js
 import React from 'react';
-import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { ArrowDown, ArrowRight } from 'lucide-react'; // On importe ArrowRight
-import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
-    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.3 });
-
     return (
-        <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-        <section 
-            id="home" 
-            ref={ref}
-            className="relative flex items-center justify-center h-screen bg-slate-900 text-white overflow-hidden"
-        >
-            {/* ... le fond animé ne change pas ... */}
-            <div className="absolute inset-0 z-0 opacity-20">
-                <div className="absolute bottom-0 left-[-20%] right-[-20%] top-[-20%] h-[140%] w-[140%] bg-gradient-to-br from-orange-500/50 via-slate-900 to-slate-900 animate-gradient-xy"></div>
-            </div>
-
-            <div 
-                className={`relative z-10 text-center px-4 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-            >
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6">
-                    <span className="block">Votre restaurant.</span>
-                    <span className="text-orange-400">Votre succès digital.</span>
-                </h1>
-                <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-12">
-                    Nous créons des expériences en ligne uniques pour les restaurateurs qui souhaitent attirer, engager et fidéliser plus de clients.
-                </p>
-                <a 
-                    href="#services" 
-                    className="group inline-flex items-center bg-orange-500 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30"
+        <section id="hero" className="py-20 md:py-32">
+            <div className="container mx-auto px-4 text-center">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
                 >
-                    Découvrir nos solutions
-                    {/* AJOUT DE L'ICÔNE ANIMÉE */}
-                    <ArrowRight className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-            </div>
-
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-                <ArrowDown className="w-8 h-8 text-slate-500" />
+                    {/* MODIFIÉ : On utilise la couleur "foreground" pour le texte principal */}
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+                        Nous Créons des <span className="text-accent">Expériences Digitales</span> <br /> d'Exception pour les Restaurateurs
+                    </h1>
+                    <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
+                        De la conception de sites web modernes à la mise en place de logiciels sur mesure, nous propulsons votre restaurant à l'ère du numérique.
+                    </p>
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+                >
+                    <a
+                        href="#contact"
+                        // MODIFIÉ : Le bouton principal utilise la couleur "accent"
+                        className="inline-flex items-center justify-center px-8 py-3 text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-accent text-accent-foreground hover:bg-accent/90 rounded-md shadow-lg"
+                    >
+                        Obtenir mon site à 900€
+                    </a>
+                    <a
+                        href="#portfolio"
+                        // MODIFIÉ : Le bouton secondaire a un style plus sobre
+                        className="inline-flex items-center justify-center px-8 py-3 text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-transparent border border-border hover:bg-secondary hover:text-secondary-foreground rounded-md shadow-sm"
+                    >
+                        Voir nos réalisations
+                    </a>
+                </motion.div>
             </div>
         </section>
-        </>
     );
 };
 
