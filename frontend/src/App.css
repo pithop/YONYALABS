@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 body {
-  /* La police est déjà définie par Tailwind, mais garder ceci assure la cohérence */
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  /* La police est maintenant entièrement gérée par Tailwind et index.css */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* SUPPRIMÉ: la couleur de fond est maintenant gérée par la classe .bg-background de Tailwind dans index.css */
 }
 
 html {
@@ -51,14 +49,15 @@ html {
 
 /* Effet de prévisualisation du Portfolio (inchangé) */
 .portfolio-preview {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: top center;
-    background-repeat: no-repeat;
-    transition: background-position 5s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+  /* Transition plus longue et plus douce pour un effet premium */
+  transition: background-position 7s ease-in-out;
 }
 
 .group:hover .portfolio-preview {
-    background-position: bottom center;
+  background-position: bottom center;
 }

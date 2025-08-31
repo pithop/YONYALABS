@@ -1,98 +1,85 @@
-// src/components/Contact.js
-
-import React, { useEffect } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useForm, ValidationError } from '@formspree/react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import {contactInfo} from '../config';
-import { useForm, ValidationError } from '@formspree/react'; // <-- Nouvel import
-import toast from 'react-hot-toast';
-import { Helmet } from 'react-helmet-async';
+import { toast } from "sonner"
 
 const Contact = () => {
-    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
-    const [state, handleSubmit] = useForm("xkgvjyap"); // Remplacez par votre ID Formspree
+    const [state, handleSubmit] = useForm("xkgvjyap");
+    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
 
-    useEffect(() => {
-        if (state.succeeded) {
-            toast.success('Votre message a bien été envoyé !');
-            // Optionnel : vider les champs du formulaire après succès
-            document.getElementById("contact-form").reset();
-        }
-    }, [state.succeeded]);
-
+    if (state.succeeded) {
+        toast.success("Message envoyé !", {
+            description: "Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais.",
+            duration: 5000,
+        });
+        // Note: Le formulaire ne se réinitialise pas automatiquement avec Formspree de cette manière.
+        // On pourrait masquer le formulaire et afficher un message de succès permanent ici si nécessaire.
+    }
+    
+    const inputStyles = "w-full px-4 py-3 bg-light-gray border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent transition-shadow";
+    const labelStyles = "block text-sm font-semibold text-dark-navy mb-2";
+    const sectionVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
     return (
-        <><Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-        <section 
+        <motion.section 
             id="contact" 
+            className="py-20 bg-white" 
             ref={ref}
-            className={`py-20 sm:py-28 bg-white transition-all duration-1000 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={sectionVariants}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Parlons de votre projet</h2>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                        Prêt à passer à la vitesse supérieure ? Contactez-nous pour discuter de vos ambitions.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                    <form 
-                        id="contact-form"
-                        onSubmit={handleSubmit}
-                        className="space-y-6"
-                    >
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-bold text-slate-700 mb-2">Nom</label>
-                            <input type="text" name="name" id="name" required className="block w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition" />
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-bold text-slate-700 mb-2">Email</label>
-                            <input type="email" name="email" id="email" required className="block w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition" />
-                            <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 mt-1 text-sm" />
-                        </div>
-                        <div>
-                            <label htmlFor="message" className="block text-sm font-bold text-slate-700 mb-2">Message</label>
-                            <textarea name="message" id="message" rows="5" required className="block w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition"></textarea>
-                            <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 mt-1 text-sm" />
-                        </div>
-                        <div>
-                            <button 
-                                type="submit"
-                                disabled={state.submitting}
-                                className="w-full bg-orange-500 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-orange-600 transition-colors duration-300 disabled:bg-slate-400 disabled:cursor-not-allowed"
-                            >
-                                {state.submitting ? 'Envoi en cours...' : 'Envoyer le message'}
-                            </button>
-                        </div>
-                    </form>
-
-                    <div className="bg-slate-50 p-8 rounded-lg border border-slate-200">
-                        <h3 className="text-2xl font-bold text-slate-900 mb-6">Nos coordonnées</h3>
-                        <ul className="space-y-5 text-slate-700">
-                            {/* Utilisation de la variable email */}
-                            <li className="flex items-center">
-                                <Mail className="w-6 h-6 text-orange-500 mr-4" />
-                                <span>{contactInfo.email}</span>
-                            </li>
-                            {/* Utilisation de la variable phone */}
-                            <li className="flex items-center">
-                                <Phone className="w-6 h-6 text-orange-500 mr-4" />
-                                <span>{contactInfo.phone}</span>
-                            </li>
-                            {/* Utilisation de la variable address */}
-                            <li className="flex items-start">
-                                <MapPin className="w-6 h-6 text-orange-500 mr-4 mt-1" />
-                                <span dangerouslySetInnerHTML={{ __html: contactInfo.address }}></span>
-                            </li>
-                        </ul>
+            <div className="container mx-auto px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={isVisible ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6 }}
+                >
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-dark-navy">
+                            Prêt à Lancer Votre Projet ? <span className="text-turquoise">Contactez-Nous</span>
+                        </h2>
+                        <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                            Remplissez le formulaire ci-dessous et parlons de la manière dont nous pouvons aider votre restaurant à briller en ligne.
+                        </p>
                     </div>
-                </div>
+
+                    <div className="max-w-2xl mx-auto">
+                        <form onSubmit={handleSubmit}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label htmlFor="name" className={labelStyles}>Nom</label>
+                                    <input id="name" type="text" name="name" required className={inputStyles} />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className={labelStyles}>Email</label>
+                                    <input id="email" type="email" name="email" required className={inputStyles} />
+                                    <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="message" className={labelStyles}>Votre message</label>
+                                <textarea id="message" name="message" rows="5" required className={inputStyles}></textarea>
+                                <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 text-sm mt-1" />
+                            </div>
+                            <div className="text-center">
+                                {/* MODIFIÉ : Bouton primaire turquoise */}
+                                <button type="submit" disabled={state.submitting} className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal hover:scale-105 disabled:bg-gray-400 disabled:scale-100">
+                                    Envoyer le message
+                                </button>
+                                {/* AJOUT : Message rassurant */}
+                                <p className="mt-4 text-sm text-gray-500">
+                                    Nous vous répondrons sous 24h.
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </motion.div>
             </div>
-        </section>
-        </>
+            </motion.section>
     );
 };
 

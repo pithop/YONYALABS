@@ -1,123 +1,80 @@
-// src/components/Example.js
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { Helmet } from 'react-helmet-async';
 
-const MetricCircle = ({ finalValue, label, isVisible }) => {
-  // ... (le code du MetricCircle reste le même)
-  const [currentValue, setCurrentValue] = useState(0);
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
-
-  useEffect(() => {
-    if (isVisible) {
-      let start = 0;
-      const duration = 1500;
-      const increment = finalValue / (duration / 16);
-
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= finalValue) {
-          setCurrentValue(finalValue);
-          clearInterval(timer);
-        } else {
-          setCurrentValue(Math.ceil(start));
-        }
-      }, 16);
-
-      return () => clearInterval(timer);
-    }
-  }, [isVisible, finalValue]);
-
-  const offset = circumference - (currentValue / 100) * circumference;
-  
-  const getColor = (value) => {
-    if (value < 50) return 'text-red-400';
-    if (value < 90) return 'text-yellow-400';
-    return 'text-green-400';
-  };
-  
-  const getStrokeColor = (value) => {
-    if (value < 50) return 'stroke-red-500';
-    if (value < 90) return 'stroke-yellow-500';
-    return 'stroke-green-500';
-  };
-
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-32 h-32">
-        <svg className="w-full h-full" viewBox="0 0 120 120">
-          <circle className="stroke-slate-700" strokeWidth="10" fill="transparent" r={radius} cx="60" cy="60" />
-          <circle
-            className={`transform -rotate-90 origin-center transition-all duration-500 ease-out ${getStrokeColor(currentValue)}`}
-            strokeWidth="10" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
-            fill="transparent" r={radius} cx="60" cy="60"
-          />
-        </svg>
-        <span className={`absolute inset-0 flex items-center justify-center text-3xl font-bold ${getColor(currentValue)}`}>
-          {currentValue}
-        </span>
-      </div>
-      <p className="mt-4 font-semibold text-slate-300">{label}</p>
-    </div>
-  );
+const comparisonData = {
+    standard: {
+        title: 'Site Standard',
+        scores: { Performance: 65, SEO: 50, 'Bonnes Pratiques': 70, Accessibilité: 75 },
+        gradient: 'from-orange-400 to-red-500',
+    },
+    yonyalabs: {
+        title: 'Notre Standard',
+        scores: { Performance: 98, SEO: 95, 'Bonnes Pratiques': 100, Accessibilité: 100 },
+        gradient: 'from-fresh-green to-turquoise',
+    },
 };
 
+const MetricBar = ({ label, score, gradient }) => (
+    <div className="w-full mb-4">
+        <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium text-gray-700">{label}</span>
+            <span className="font-bold text-dark-navy">{score} / 100</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className={`bg-gradient-to-r ${gradient} h-2.5 rounded-full`} style={{ width: `${score}%` }}></div>
+        </div>
+    </div>
+);
+
 const Example = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
-  const beforeMetrics = { performance: 34, accessibility: 62, seo: 71 };
-  const afterMetrics = { performance: 98, accessibility: 100, seo: 100 };
+    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
 
-  return (
-    <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-    <section 
-      id="example" ref={ref}
-      className={`py-20 sm:py-28 bg-slate-900 overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">La performance n'est pas une option.</h2>
-          <p className="text-lg text-slate-400 max-w-3xl mx-auto">
-            Nous ne nous contentons pas de créer de beaux sites. Nous construisons des plateformes rapides, accessibles et optimisées pour le succès.
-          </p>
-        </div>
-        
-        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-px bg-slate-700 rounded-2xl shadow-2xl shadow-slate-950/50 border border-slate-700 transition-all duration-700 ease-out ${isVisible ? 'scale-100' : 'scale-90'}`}>
-            <div className="bg-slate-800/50 p-6 sm:p-12 rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none">
-                <h3 className="text-center text-2xl font-bold text-slate-400 mb-8">Site Standard</h3>
-                <div className="flex flex-col sm:flex-row items-center justify-around space-y-8 sm:space-y-0">
-                    <MetricCircle finalValue={beforeMetrics.performance} label="Performance" isVisible={isVisible} />
-                    <MetricCircle finalValue={beforeMetrics.accessibility} label="Accessibilité" isVisible={isVisible} />
-                    <MetricCircle finalValue={beforeMetrics.seo} label="SEO" isVisible={isVisible} />
+    const sectionVariants = {
+      hidden: { opacity: 0, y: 50 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
+
+    return (
+        <motion.section 
+            id="example" 
+            className="py-20 bg-light-gray" 
+            ref={ref}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={sectionVariants}
+        >
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-dark-navy">
+                        La Différence se Mesure en <span className="text-turquoise">Résultats</span>
+                    </h2>
+                    <p className="mt-4 max-w-3xl mx-auto text-xl text-turquoise font-semibold">
+                        Des performances qui propulsent votre visibilité et vos réservations.
+                    </p>
                 </div>
-            </div>
 
-            {/* --- CORRECTION MOBILE ICI --- */}
-            <div className="bg-gradient-to-br from-orange-500/10 to-transparent p-6 sm:p-12 rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none">
-                <div className="flex flex-col items-center text-center mb-8">
-                    <div className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                        OPTIMISÉ PAR YONYA LABS
+                {/* CORRECTION : On a retiré `motion`, `variants`, `initial` et `animate` de cette div. C'est maintenant une div normale. */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    {/* Carte "Site Standard" */}
+                    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <h3 className="text-2xl font-bold text-center text-gray-500 mb-6">{comparisonData.standard.title}</h3>
+                        {Object.entries(comparisonData.standard.scores).map(([key, value]) => (
+                            <MetricBar key={key} label={key} score={value} gradient={comparisonData.standard.gradient} />
+                        ))}
                     </div>
-                    <h3 className="text-2xl font-bold text-orange-400">
-                        Notre Standard
-                    </h3>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-around space-y-8 sm:space-y-0">
-                    <MetricCircle finalValue={afterMetrics.performance} label="Performance" isVisible={isVisible} />
-                    <MetricCircle finalValue={afterMetrics.accessibility} label="Accessibilité" isVisible={isVisible} />
-                    <MetricCircle finalValue={afterMetrics.seo} label="SEO" isVisible={isVisible} />
+
+                    {/* Carte "Notre Standard" */}
+                    <div className="bg-white p-6 rounded-lg shadow-2xl border-2 border-turquoise transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                        <h3 className="text-2xl font-bold text-center text-dark-navy mb-6">{comparisonData.yonyalabs.title}</h3>
+                        {Object.entries(comparisonData.yonyalabs.scores).map(([key, value]) => (
+                            <MetricBar key={key} label={key} score={value} gradient={comparisonData.yonyalabs.gradient} />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
-      </div>
-    </section>
-    </>
-  );
+        </motion.section>
+    );
 };
 
 export default Example;

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { motion } from 'framer-motion';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { ExternalLink } from 'lucide-react';
-import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import { ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const demos = [
@@ -15,77 +15,84 @@ const demos = [
 ];
 
 const Portfolio = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'center' });
   const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
 
-  return (
-    <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-    <section 
-      id="portfolio" 
-      ref={ref}
-      className={`py-20 sm:py-28 bg-white transition-opacity duration-1000 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Notre portfolio</h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Découvrez quelques-unes de nos réalisations qui allient esthétique et performance.
-          </p>
-        </div>
+  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
+  const scrollNext = () => emblaApi && emblaApi.scrollNext();
 
-        <div className="max-w-4xl mx-auto custom-carousel-wrapper">
-          <Carousel
-            showThumbs={false}
-            showStatus={false}
-            infiniteLoop={true}
-            autoPlay={true}
-            interval={5000}
-            renderIndicator={(onClickHandler, isSelected, index, label) => {
-              if (isSelected) {
-                return (
-                  <li className="custom-indicator selected" aria-label={`Slide ${index + 1}`} title={`Slide ${index + 1}`} />
-                );
-              }
-              return (
-                <li className="custom-indicator" onClick={onClickHandler} onKeyDown={onClickHandler} value={index} key={index} role="button" tabIndex={0} title={`${label} ${index + 1}`} aria-label={`${label} ${index + 1}`} />
-              );
-            }}
+  const sectionVariants = {
+      hidden: { opacity: 0, y: 50 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
+  return (
+      <>
+          <Helmet>
+              <title>Portfolio | YonYa Labs - Créations de Sites pour Restaurants</title>
+              <meta name="description" content="Découvrez nos réalisations : des sites web modernes et performants conçus spécifiquement pour les restaurateurs." />
+          </Helmet>
+          <motion.section
+              id="portfolio"
+              ref={ref}
+              variants={sectionVariants}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+              className="py-20 sm:py-28 bg-white overflow-hidden"
           >
-            {demos.map((project, index) => (
-              // --- CORRECTION ICI : padding-bottom (pb-10) a été retiré ---
-              <div key={index} className="px-1 sm:px-4 md:px-8">
-                <a 
-                  href={project.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
-                >
-                  <div className="h-80 overflow-hidden relative bg-slate-100">
-                    <div 
-                      className="portfolio-preview"
-                      style={{ backgroundImage: `url(${project.imageUrl})` }}
-                    ></div>
-                    <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <ExternalLink className="w-6 h-6 text-white" />
-                    </div>
+              <div className="container mx-auto px-4">
+                  <div className="text-center mb-12">
+                      <h2 className="text-4xl md:text-5xl font-extrabold text-dark-navy mb-4">
+                          Nos <span className="text-turquoise">Réalisations</span>
+                      </h2>
+                      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                          Chaque projet est une collaboration unique. Découvrez l'expérience que nous pouvons créer pour vous.
+                      </p>
                   </div>
-                  <div className="p-6 bg-white text-left">
-                    <p className="text-orange-500 font-semibold text-sm mb-1">{project.category}</p>
-                    <h3 className="text-xl font-bold text-slate-900 group-hover:text-orange-600 transition-colors">
-                      {project.name}
-                    </h3>
+
+                  <div className="relative">
+                      <div className="overflow-hidden" ref={emblaRef}>
+                          <div className="flex">
+                              {demos.map((project) => (
+                                  <div key={project.name} className="flex-shrink-0 flex-grow-0 basis-full md:basis-4/5 lg:basis-3/5 px-4">
+                                      <div className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white">
+                                          <div className="h-80 md:h-96 w-full overflow-hidden relative">
+                                              <div
+                                                  className="portfolio-preview"
+                                                  style={{ backgroundImage: `url(${project.imageUrl})` }}
+                                              ></div>
+                                              <a
+                                                  href={project.url}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                              >
+                                                  <ExternalLink className="w-6 h-6 text-white" />
+                                              </a>
+                                          </div>
+                                          <div className="p-6 text-left">
+                                              <p className="text-turquoise font-semibold text-sm mb-1">{project.category}</p>
+                                              <h3 className="text-xl font-bold text-dark-navy">
+                                                  {project.name}
+                                              </h3>
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* Boutons de navigation personnalisés */}
+                      <button onClick={scrollPrev} className="absolute top-1/2 left-0 md:-left-4 transform -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-md transition-all">
+                          <ArrowLeft className="w-6 h-6 text-dark-navy" />
+                      </button>
+                      <button onClick={scrollNext} className="absolute top-1/2 right-0 md:-right-4 transform -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-md transition-all">
+                          <ArrowRight className="w-6 h-6 text-dark-navy" />
+                      </button>
                   </div>
-                </a>
               </div>
-            ))}
-          </Carousel>
-        </div>
-      </div>
-    </section>
-    </>
+          </motion.section>
+      </>
   );
 };
 

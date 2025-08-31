@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import logo from '../assets/logo.png'
+// SUPPRIMÉ : L'import du logo n'est plus nécessaire
+// import logo from '../assets/logo-white.png'; 
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +14,12 @@ const Header = () => {
     ];
 
     return (
-        // MODIFIÉ : Fond transparent (hérite de background), ombre subtile
-        <header className="bg-background/80 sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur-lg">
+        <header className="bg-dark-navy text-white sticky top-0 z-50 w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                    <a href="#hero" className="flex-shrink-0">
-                        <img className="h-10 w-auto" src={logo} alt="YonYa Labs Logo" />
+                <div className="flex h-20 items-center justify-between">
+                    {/* MODIFIÉ : L'image est remplacée par un logo texte stylisé */}
+                    <a href="#hero" className="text-2xl font-bold tracking-tight text-white transition-opacity hover:opacity-80">
+                        YonYa<span className="font-medium text-turquoise">Labs</span>
                     </a>
                     <div className="hidden md:block">
                         <nav className="flex items-center space-x-8">
@@ -26,8 +27,7 @@ const Header = () => {
                                 <a
                                     key={link.href}
                                     href={link.href}
-                                    // MODIFIÉ : Couleur de texte principale et couleur d'accent au survol
-                                    className="nav-link font-medium text-foreground/80 hover:text-accent transition-colors"
+                                    className="font-medium hover:text-turquoise transition-colors"
                                 >
                                     {link.text}
                                 </a>
@@ -35,31 +35,25 @@ const Header = () => {
                         </nav>
                     </div>
                     <div className="hidden md:block">
-                         <a href="#contact" className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-accent text-accent-foreground hover:bg-accent/90 h-9 rounded-md">
+                         <a href="#contact" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-turquoise text-white hover:bg-teal rounded-lg shadow-md">
                             Nous Contacter
                         </a>
                     </div>
                     <div className="md:hidden">
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            // MODIFIÉ : Couleur du bouton mobile
-                            className="inline-flex items-center justify-center p-2 rounded-md text-foreground/80 hover:text-accent focus:outline-none"
-                        >
+                        <button onClick={() => setIsOpen(!isOpen)} className="inline-flex items-center justify-center p-2 rounded-md hover:text-turquoise focus:outline-none">
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
             </div>
             {isOpen && (
-                // MODIFIÉ : Fond du menu mobile
-                <div className="md:hidden mobile-menu border-t border-border/40 bg-background">
+                <div className="md:hidden mobile-menu bg-dark-navy">
                     <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
-                                // MODIFIÉ : Couleurs des liens mobiles
-                                className="block px-3 py-2 rounded-md text-base font-medium text-foreground/80 hover:bg-secondary hover:text-secondary-foreground"
+                                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-white/10"
                                 onClick={() => setIsOpen(false)}
                             >
                                 {link.text}
@@ -67,7 +61,7 @@ const Header = () => {
                         ))}
                     </nav>
                     <div className="px-4 pb-4">
-                        <a href="#contact" className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-accent text-accent-foreground hover:bg-accent/90 h-9 rounded-md">
+                        <a href="#contact" className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-turquoise text-white hover:bg-teal rounded-lg shadow-md">
                            Nous Contacter
                         </a>
                     </div>

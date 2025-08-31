@@ -1,57 +1,99 @@
-// frontend/src/components/WhyMe.js
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Rocket, Users, Code, ShieldCheck } from 'lucide-react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { Gem, Zap, Users, ShieldCheck } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 
 const features = [
-  { icon: <Gem className="w-10 h-10" />, title: "Design sur Mesure & Premium", description: "Nous créons des expériences digitales uniques qui captivent vos clients et incarnent l'âme de votre restaurant." },
-  { icon: <Zap className="w-10 h-10" />, title: "Performance et Rapidité", description: "Nous optimisons chaque ligne de code pour garantir une vitesse de chargement fulgurante et une fluidité exemplaire." },
-  { icon: <Users className="w-10 h-10" />, title: "Partenaire, Pas Prestataire", description: "Votre vision est notre priorité, et votre succès est notre plus grande fierté. Nous collaborons étroitement avec vous." },
-  { icon: <ShieldCheck className="w-10 h-10" />, title: "Expertise Technique Solide", description: "Nous construisons des solutions robustes, sécurisées et prêtes pour l'avenir avec React et Tailwind CSS." }
+    {
+        icon: Rocket,
+        title: 'Design & Performance',
+        description: 'Nous créons des sites ultra-rapides avec un design moderne qui captive vos clients dès la première seconde.',
+    },
+    {
+        icon: Users,
+        title: 'Expertise Restaurateurs',
+        description: 'Nous ne sommes pas juste des développeurs. Nous comprenons les défis du secteur de la restauration.',
+    },
+    {
+        icon: Code,
+        title: 'Technologie de Pointe',
+        description: 'React, Tailwind CSS, Vercel. Nous utilisons les meilleurs outils pour garantir un site fiable et évolutif.',
+    },
+    {
+        icon: ShieldCheck,
+        title: 'Accompagnement',
+        description: 'De la mise en ligne à la maintenance, nous sommes votre partenaire digital sur le long terme.',
+    },
 ];
 
 const WhyMe = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
+    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
 
-  return (
-    <>
-      <Helmet>
-        <title>YonYa Labs | Création de Sites Web d'Exception pour Restaurants</title>
-        <meta name="description" content="YonYa Labs conçoit des sites internet sur mesure pour les restaurateurs en France. Site vitrine, commande en ligne, réservation. Sublimez votre présence en ligne." />
-      </Helmet>
-    <section id="whyme" ref={ref} className="py-20 sm:py-28 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center mb-16">
-          <h2 className="text-base text-orange-600 font-semibold tracking-wide uppercase">Pourquoi nous choisir ?</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">L'excellence digitale au service de votre passion</p>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Nous combinons expertise technique et sensibilité créative pour des résultats qui dépassent vos attentes.</p>
-        </div>
+    const sectionVariants = {
+      hidden: { opacity: 0, y: 50 },
+      // On ajoute un "staggerChildren" pour animer les cartes les unes après les autres
+      visible: { 
+          opacity: 1, 
+          y: 0, 
+          transition: { 
+              duration: 0.6, 
+              ease: "easeOut",
+              staggerChildren: 0.1 
+          } 
+      }
+    };
+    
+    // On définit une animation simple pour les cartes (les "items")
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
-          {features.map((feature, index) => (
-            <div 
-              key={index} 
-              // ANIMATION DÉCALÉE ICI
-              className={`flex transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              <div className="flex-shrink-0">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-orange-100 text-orange-500 transform transition-transform duration-300 hover:scale-110">
-                  {feature.icon}
+    return (       
+        <motion.section 
+            id="why-me" 
+            className="py-20 bg-light-gray" // Fond gris clair pour l'alternance
+            ref={ref}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={sectionVariants}
+        >
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-dark-navy">
+                        Conçu par des Experts, pour des <span className="text-turquoise">Passionnés</span>
+                    </h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                        Nous allons au-delà du simple site web. Nous construisons votre succès en ligne.
+                    </p>
                 </div>
-              </div>
-              <div className="ml-6">
-                <h3 className="text-xl font-bold text-slate-900">{feature.title}</h3>
-                <p className="mt-2 text-slate-600">{feature.description}</p>
-              </div>
+                {/* CORRECTION : On a retiré les props d'animation de cette div car le parent gère le "stagger" */}
+                <div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                >
+                    {features.map((feature, index) => {
+                        const Icon = feature.icon;
+                        const iconColorClass = index % 2 === 0 ? 'text-turquoise' : 'text-fresh-green';
+
+                        return (
+                            // CORRECTION : On anime chaque carte individuellement avec `itemVariants`
+                            <motion.div
+                                key={index}
+                                variants={itemVariants}
+                                className="bg-white p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+                            >
+                                <div className={`inline-block p-4 bg-light-gray rounded-full mb-4`}>
+                                    <Icon className={`w-8 h-8 ${iconColorClass}`} />
+                                </div>
+                                <h3 className="text-xl font-bold text-dark-navy mb-2">{feature.title}</h3>
+                                <p className="text-gray-600">{feature.description}</p>
+                            </motion.div>
+                        );
+                    })}
+                </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-    </>
-  );
+        </motion.section>
+    );
 };
 
 export default WhyMe;
