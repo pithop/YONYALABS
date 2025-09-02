@@ -4,11 +4,10 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { toast } from "sonner";
 
 const Contact = () => {
-    // On utilise notre propre état pour gérer la soumission
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
 
-    // La nouvelle fonction qui envoie les données à NOTRE backend
+    // --- NOUVELLE FONCTION handleSubmit AVEC LOGGING AMÉLIORÉ ---
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsSubmitting(true);
@@ -16,8 +15,8 @@ const Contact = () => {
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
 
-        // L'URL de notre API, configurée dans Vercel
-        const apiUrl = `${process.env.REACT_APP_API_URL || 'http://127.0.0.1:5000'}/api/contact`;
+        // On utilise une URL relative, Vercel s'occupe du reste.
+        const apiUrl = `/api/contact`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -26,9 +25,20 @@ const Contact = () => {
                 body: JSON.stringify(data),
             });
 
+            // On essaie de lire la réponse JSON, qu'elle soit OK ou non
+            const responseData = await response.json();
+                    
             if (!response.ok) {
-                // Si le serveur retourne une erreur (ex: 500)
-                throw new Error('La réponse du serveur n\'est pas OK');
+                // Log plus détaillé de l'erreur dans la console du navigateur
+                console.error('Erreur serveur:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: responseData
+                });
+                            
+                // On utilise le message d'erreur du serveur s'il existe
+                const errorMessage = responseData.error || 'Une erreur inattendue est survenue';
+                throw new Error(errorMessage);
             }
 
             toast.success("Message envoyé !", {
@@ -36,10 +46,13 @@ const Contact = () => {
                 duration: 5000,
             });
             event.target.reset(); // On vide le formulaire
+
         } catch (error) {
             console.error('Erreur lors de l\'envoi:', error);
+            
+            // On affiche le message d'erreur détaillé dans la notification
             toast.error("Erreur d'envoi", {
-                description: "Une erreur est survenue. Veuillez réessayer plus tard.",
+                description: error.message || "Une erreur est survenue. Veuillez réessayer plus tard.",
             });
         } finally {
             setIsSubmitting(false); // On réactive le bouton

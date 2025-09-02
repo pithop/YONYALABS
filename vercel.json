@@ -2,6 +2,10 @@
   "version": 2,
   "builds": [
     {
+      "src": "api/contact.py",
+      "use": "@vercel/python"
+    },
+    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -13,8 +17,23 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/contact.py"
+    },
+    {
       "src": "/(.*)",
-      "dest": "frontend/build/index.html"
+      "dest": "frontend/build/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
     }
   ]
 }
