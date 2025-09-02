@@ -14,48 +14,44 @@ const Contact = () => {
         
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-
-        // On utilise une URL relative, Vercel s'occupe du reste.
-        const apiUrl = `/api/contact`;
-
+        
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch('/api/contact', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(data),
             });
-
-            // On essaie de lire la réponse JSON, qu'elle soit OK ou non
+            
             const responseData = await response.json();
-                    
+            
             if (!response.ok) {
-                // Log plus détaillé de l'erreur dans la console du navigateur
-                console.error('Erreur serveur:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    data: responseData
+                console.error('Erreur serveur:', { 
+                    status: response.status, 
+                    data: responseData 
                 });
-                            
-                // On utilise le message d'erreur du serveur s'il existe
-                const errorMessage = responseData.error || 'Une erreur inattendue est survenue';
-                throw new Error(errorMessage);
+                throw new Error(responseData.error || 'Une erreur est survenue');
             }
-
-            toast.success("Message envoyé !", {
-                description: "Merci de nous avoir contactés. Consultez vos emails pour une confirmation.",
-                duration: 5000,
-            });
-            event.target.reset(); // On vide le formulaire
-
+            
+            toast.success("Message envoyé avec succès !");
+            event.target.reset();
+            
         } catch (error) {
             console.error('Erreur lors de l\'envoi:', error);
             
-            // On affiche le message d'erreur détaillé dans la notification
-            toast.error("Erreur d'envoi", {
-                description: error.message || "Une erreur est survenue. Veuillez réessayer plus tard.",
-            });
+            // Gestion d'erreur plus précise
+            if (error.message.includes('Failed to fetch')) {
+                toast.error("Erreur de connexion", { 
+                    description: "Impossible de contacter le serveur" 
+                });
+            } else {
+                toast.error("Erreur d'envoi", { 
+                    description: error.message 
+                });
+            }
         } finally {
-            setIsSubmitting(false); // On réactive le bouton
+            setIsSubmitting(false);
         }
     };
     

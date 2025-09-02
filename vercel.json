@@ -1,39 +1,20 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/contact.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "installCommand": "cd frontend && npm install",
-        "buildCommand": "cd frontend && npm run build",
-        "outputDirectory": "build"
-      }
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/build",
+  "functions": {
+    "api/contact.py": {
+      "runtime": "python3.9"
     }
-  ],
+  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/contact",
       "destination": "/api/contact"
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/xml"
-        }
-      ]
+      "destination": "/$1"
     }
   ]
 }
