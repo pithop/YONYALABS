@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { toast } from "sonner";
@@ -7,7 +7,6 @@ const Contact = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
 
-    // --- NOUVELLE FONCTION handleSubmit AVEC LOGGING AMÉLIORÉ ---
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsSubmitting(true);
@@ -15,8 +14,13 @@ const Contact = () => {
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
         
+        // --- MODIFICATION PRINCIPALE ICI ---
+        // Nous construisons l'URL complète de l'API à partir de notre variable d'environnement.
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/contact`;
+        
         try {
-            const response = await fetch('/api/contact', {
+            // Nous utilisons la nouvelle URL complète pour l'appel fetch.
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -31,7 +35,7 @@ const Contact = () => {
                     status: response.status, 
                     data: responseData 
                 });
-                throw new Error(responseData.error || 'Une erreur est survenue');
+                throw new Error(responseData.error || 'Une erreur est survenue lors de la communication avec le serveur.');
             }
             
             toast.success("Message envoyé avec succès !");
@@ -40,13 +44,12 @@ const Contact = () => {
         } catch (error) {
             console.error('Erreur lors de l\'envoi:', error);
             
-            // Gestion d'erreur plus précise
             if (error.message.includes('Failed to fetch')) {
                 toast.error("Erreur de connexion", { 
-                    description: "Impossible de contacter le serveur" 
+                    description: "Impossible de joindre le serveur. Veuillez réessayer plus tard." 
                 });
             } else {
-                toast.error("Erreur d'envoi", { 
+                toast.error("Une erreur est survenue", { 
                     description: error.message 
                 });
             }
@@ -55,7 +58,7 @@ const Contact = () => {
         }
     };
     
-    const inputStyles = "w-full px-4 py-3 bg-light-gray border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent transition-shadow";
+    const inputStyles = "w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent transition-shadow";
     const labelStyles = "block text-sm font-semibold text-dark-navy mb-2";
     
     const sectionVariants = {
@@ -88,7 +91,6 @@ const Contact = () => {
                     </div>
 
                     <div className="max-w-2xl mx-auto">
-                        {/* On utilise notre nouvelle fonction handleSubmit */}
                         <form onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                                 <div>
@@ -105,8 +107,7 @@ const Contact = () => {
                                 <textarea id="message" name="message" rows="5" required className={inputStyles}></textarea>
                             </div>
                             <div className="text-center">
-                                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal hover:scale-105 disabled:bg-gray-400 disabled:scale-100">
-                                    {/* Le texte du bouton change pendant l'envoi */}
+                                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal-500 hover:scale-105 disabled:bg-gray-400 disabled:scale-100 disabled:cursor-not-allowed">
                                     {isSubmitting ? 'Envoi en cours...' : 'Envoyer le message'}
                                 </button>
                                 <p className="mt-4 text-sm text-gray-500">
