@@ -14,50 +14,53 @@ const Contact = () => {
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
         
-        // --- MODIFICATION PRINCIPALE ICI ---
-        // Nous construisons l'URL complète de l'API à partir de notre variable d'environnement.
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/contact`;
+        // --- NOS DEUX ENDPOINTS ---
+        // 1. Notre API personnalisée sur PythonAnywhere
+        const customApiUrl = `${process.env.REACT_APP_API_URL}/api/contact`;
+        
+        // 2. L'endpoint de votre formulaire Formspree
+        const formspreeUrl = "https://formspree.io/f/xkgvjyap"; // Votre ID Formspree
         
         try {
-            // Nous utilisons la nouvelle URL complète pour l'appel fetch.
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-            
-            const responseData = await response.json();
-            
-            if (!response.ok) {
-                console.error('Erreur serveur:', { 
-                    status: response.status, 
-                    data: responseData 
-                });
-                throw new Error(responseData.error || 'Une erreur est survenue lors de la communication avec le serveur.');
+            // Nous utilisons Promise.all pour envoyer les deux requêtes en parallèle
+            const [responseApi, responseFormspree] = await Promise.all([
+                // Premier appel : vers notre API
+                fetch(customApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                }),
+                // Deuxième appel : vers Formspree
+                fetch(formspreeUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json' // Important pour Formspree
+                    },
+                    body: JSON.stringify(data),
+                })
+            ]);
+
+            // Vérifier si les deux soumissions ont réussi
+            if (!responseApi.ok || !responseFormspree.ok) {
+                // Si l'un des deux échoue, nous générons une erreur
+                throw new Error('Une des soumissions a échoué.');
             }
             
             toast.success("Message envoyé avec succès !");
             event.target.reset();
             
         } catch (error) {
-            console.error('Erreur lors de l\'envoi:', error);
-            
-            if (error.message.includes('Failed to fetch')) {
-                toast.error("Erreur de connexion", { 
-                    description: "Impossible de joindre le serveur. Veuillez réessayer plus tard." 
-                });
-            } else {
-                toast.error("Une erreur est survenue", { 
-                    description: error.message 
-                });
-            }
+            console.error("Erreur lors de l'envoi multiple:", error);
+            toast.error("Une erreur est survenue", { 
+                description: "Votre message n'a pas pu être envoyé. Veuillez réessayer." 
+            });
         } finally {
             setIsSubmitting(false);
         }
     };
     
+    // ... Le reste de votre composant (styles, JSX) reste inchangé ...
     const inputStyles = "w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent transition-shadow";
     const labelStyles = "block text-sm font-semibold text-dark-navy mb-2";
     

@@ -16,31 +16,104 @@ app = Flask(__name__)
 CORS(app)
 
 def create_confirmation_html(name):
-    """Génère le HTML pour l'email de confirmation de marque."""
+    """Génère le HTML pour l'email de confirmation de marque avec un design amélioré."""
+    # URL de notre site (à adapter si nécessaire)
+    website_url = "https://yonyalabs.com" 
+    
     return f"""
     <!DOCTYPE html>
-    <html>
-        <head>
-            <style>
-                body {{ font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f7; }}
-                .container {{ max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }}
-                .header {{ background-color: #0B132B; color: #ffffff; padding: 30px; text-align: center; }}
-                .header h1 {{ margin: 0; font-size: 24px; font-weight: bold; }}
-                .header .logo-labs {{ color: #1CC5B7; font-weight: 500; }}
-                .content {{ padding: 30px; color: #333333; line-height: 1.6; }}
-                .content h2 {{ color: #0B132B; font-size: 20px; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header"><h1>YonYa<span class="logo-labs">Labs</span></h1></div>
-                <div class="content">
-                    <h2>Bonjour {name},</h2>
-                    <p>Nous avons bien reçu votre message et nous vous remercions de l'intérêt que vous portez à nos services.</p>
-                    <p>Ceci est une confirmation que votre demande est entre de bonnes mains. Nous nous engageons à revenir vers vous personnellement sous 24 heures.</p>
-                </div>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            /* Style de base */
+            body {{
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f7;
+                font-family: 'Poppins', Arial, sans-serif;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                background-color: #ffffff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                border: 1px solid #e5e7eb;
+            }}
+            /* En-tête */
+            .header {{
+                background-color: #0B132B; /* Notre bleu marine */
+                color: #ffffff;
+                padding: 30px;
+                text-align: center;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: bold;
+                letter-spacing: 1px;
+            }}
+            .header .logo-labs {{
+                color: #1CC5B7; /* Notre turquoise */
+                font-weight: 500;
+            }}
+            /* Contenu */
+            .content {{
+                padding: 35px 40px;
+                color: #374151; /* Gris foncé pour le texte */
+                line-height: 1.7;
+                font-size: 16px;
+            }}
+            .content h2 {{
+                color: #0B132B;
+                font-size: 22px;
+                margin-top: 0;
+            }}
+            .content p {{
+                margin-bottom: 20px;
+            }}
+            /* Bouton d'appel à l'action (CTA) */
+            .cta-button {{
+                display: inline-block;
+                background-color: #1CC5B7;
+                color: #ffffff;
+                padding: 14px 28px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 16px;
+                margin-top: 10px;
+                transition: background-color 0.2s;
+            }}
+            /* Pied de page */
+            .footer {{
+                text-align: center;
+                padding: 25px;
+                font-size: 12px;
+                color: #9ca3af; /* Gris clair */
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>YonYa<span class="logo-labs">Labs</span></h1>
             </div>
-        </body>
+            <div class="content">
+                <h2>Bonjour {name},</h2>
+                <p>Nous vous confirmons la bonne réception de votre message et nous vous remercions de l'intérêt que vous portez à nos services.</p>
+                <p>Votre projet nous enthousiasme déjà ! Un membre de notre équipe reviendra personnellement vers vous sous 24 heures pour en discuter plus en détail.</p>
+                <p>En attendant, n'hésitez pas à explorer nos réalisations :</p>
+                <a href="{website_url}" class="cta-button" style="color: #ffffff;">Découvrir nos projets</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; {2025} YonYa Labs. Tous droits réservés.</p>
+        </div>
+    </body>
     </html>
     """
 
