@@ -21,7 +21,17 @@ const Home = () => {
                 <WhyMe />
                 <Contact />
             </main>
-            <Toaster />
+            <Toaster 
+                position="bottom-right"
+                toastOptions={{
+                    classNames: {
+                        toast: 'bg-white border-2 border-turquoise shadow-lg',
+                        title: 'text-dark-navy font-bold',
+                        description: 'text-gray-600',
+                        success: 'border-fresh-green',
+                    },
+                }}
+            />
             <Footer />
         </div>
     );

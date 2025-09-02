@@ -1,75 +1,96 @@
-from fastapi import FastAPI, APIRouter
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
-import logging
-from pathlib import Path
-from pydantic import BaseModel, Field
-from typing import List
-import uuid
-from datetime import datetime
+import smtplib
+import ssl
+from email.message import EmailMessage
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
 
+load_dotenv()
 
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+app = Flask(__name__)
+# On configure CORS de manière plus sécurisée pour la production à venir
+CORS(app, resources={r"/api/*": {"origins": ["https://yonyalabs.com", "http://localhost:3000"]}})
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Notre fonction pour créer le template HTML reste INCHANGÉE
+def create_confirmation_html(name):
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f7; }}
+            .container {{ max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }}
+            .header {{ background-color: #0B132B; color: #ffffff; padding: 30px; text-align: center; }}
+            .header h1 {{ margin: 0; font-size: 24px; font-weight: bold; }}
+            .header .logo-labs {{ color: #1CC5B7; font-weight: 500; }}
+            .content {{ padding: 30px; color: #333333; line-height: 1.6; }}
+            .content h2 {{ color: #0B132B; font-size: 20px; }}
+            .footer {{ background-color: #f5f5f7; padding: 20px; text-align: center; font-size: 12px; color: #888888; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>YonYa<span class="logo-labs">Labs</span></h1>
+            </div>
+            <div class="content">
+                <h2>Bonjour {name},</h2>
+                <p>Nous avons bien reçu votre message et nous vous remercions de l'intérêt que vous portez à nos services.</p>
+                <p>Ceci est une confirmation que votre demande est entre de bonnes mains. Nous nous engageons à revenir vers vous personnellement sous 24 heures.</p>
+                <br>
+                <p>Cordialement,</p>
+                <p><strong>L'équipe YonYa Labs</strong></p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2024 YonYa Labs. Tous droits réservés.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
-# Create the main app without a prefix
-app = FastAPI()
+@app.route('/api/contact', methods=['POST'])
+def handle_contact():
+    data = request.get_json()
+    name = data.get('name')
+    email_client = data.get('email')
+    message_content = data.get('message')
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+    if not all([name, email_client, message_content]):
+        return jsonify({'error': 'Données manquantes'}), 400
 
+    email_user = os.environ.get('EMAIL_USER')
+    email_password = os.environ.get('EMAIL_PASSWORD')
+    email_receiver = os.environ.get('TO_EMAIL')
 
-# Define Models
-class StatusCheck(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    # 1. Préparer l'email qui nous est envoyé (notification)
+    msg_to_us = EmailMessage()
+    msg_to_us['Subject'] = f"Nouveau message de {name} via yonyalabs.com"
+    msg_to_us['From'] = email_user
+    msg_to_us['To'] = email_receiver
+    html_to_us = f'<strong>Nom:</strong> {name}<br><strong>Email:</strong> {email_client}<br><strong>Message:</strong><br>{message_content.replace(chr(10), "<br>")}'
+    msg_to_us.set_content(html_to_us, subtype='html')
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+    # 2. Préparer l'email de confirmation design pour le client
+    msg_to_client = EmailMessage()
+    msg_to_client['Subject'] = "Nous avons bien reçu votre message !"
+    msg_to_client['From'] = email_user
+    msg_to_client['To'] = email_client
+    html_to_client = create_confirmation_html(name)
+    msg_to_client.set_content(html_to_client, subtype='html')
 
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
+    # Envoyer les emails via le serveur SMTP de Gmail
+    context = ssl.create_default_context()
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+            smtp.login(email_user, email_password)
+            smtp.send_message(msg_to_us)
+            smtp.send_message(msg_to_client)
+        return jsonify({'message': 'Emails envoyés avec succès'}), 200
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'email: {e}")
+        return jsonify({'error': str(e)}), 500
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.dict()
-    status_obj = StatusCheck(**status_dict)
-    _ = await db.status_checks.insert_one(status_obj.dict())
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find().to_list(1000)
-    return [StatusCheck(**status_check) for status_check in status_checks]
-
-# Include the router in the main app
-app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+if __name__ == '__main__':
+    app.run(debug=True)

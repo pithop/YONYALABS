@@ -1,28 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useForm, ValidationError } from '@formspree/react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 const Contact = () => {
-    const [state, handleSubmit] = useForm("xkgvjyap");
+    // On utilise notre propre état pour gérer la soumission
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
 
-    if (state.succeeded) {
-        toast.success("Message envoyé !", {
-            description: "Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais.",
-            duration: 5000,
-        });
-        // Note: Le formulaire ne se réinitialise pas automatiquement avec Formspree de cette manière.
-        // On pourrait masquer le formulaire et afficher un message de succès permanent ici si nécessaire.
-    }
+    // La nouvelle fonction qui envoie les données à NOTRE backend
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setIsSubmitting(true);
+        
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        // L'URL de notre API, configurée dans Vercel
+        const apiUrl = `${process.env.REACT_APP_API_URL || 'http://127.0.0.1:5000'}/api/contact`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                // Si le serveur retourne une erreur (ex: 500)
+                throw new Error('La réponse du serveur n\'est pas OK');
+            }
+
+            toast.success("Message envoyé !", {
+                description: "Merci de nous avoir contactés. Consultez vos emails pour une confirmation.",
+                duration: 5000,
+            });
+            event.target.reset(); // On vide le formulaire
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi:', error);
+            toast.error("Erreur d'envoi", {
+                description: "Une erreur est survenue. Veuillez réessayer plus tard.",
+            });
+        } finally {
+            setIsSubmitting(false); // On réactive le bouton
+        }
+    };
     
     const inputStyles = "w-full px-4 py-3 bg-light-gray border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent transition-shadow";
     const labelStyles = "block text-sm font-semibold text-dark-navy mb-2";
+    
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
     };
+
     return (
         <motion.section 
             id="contact" 
@@ -48,6 +79,7 @@ const Contact = () => {
                     </div>
 
                     <div className="max-w-2xl mx-auto">
+                        {/* On utilise notre nouvelle fonction handleSubmit */}
                         <form onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                                 <div>
@@ -57,20 +89,17 @@ const Contact = () => {
                                 <div>
                                     <label htmlFor="email" className={labelStyles}>Email</label>
                                     <input id="email" type="email" name="email" required className={inputStyles} />
-                                    <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-sm mt-1" />
                                 </div>
                             </div>
                             <div className="mb-6">
                                 <label htmlFor="message" className={labelStyles}>Votre message</label>
                                 <textarea id="message" name="message" rows="5" required className={inputStyles}></textarea>
-                                <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 text-sm mt-1" />
                             </div>
                             <div className="text-center">
-                                {/* MODIFIÉ : Bouton primaire turquoise */}
-                                <button type="submit" disabled={state.submitting} className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal hover:scale-105 disabled:bg-gray-400 disabled:scale-100">
-                                    Envoyer le message
+                                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal hover:scale-105 disabled:bg-gray-400 disabled:scale-100">
+                                    {/* Le texte du bouton change pendant l'envoi */}
+                                    {isSubmitting ? 'Envoi en cours...' : 'Envoyer le message'}
                                 </button>
-                                {/* AJOUT : Message rassurant */}
                                 <p className="mt-4 text-sm text-gray-500">
                                     Nous vous répondrons sous 24h.
                                 </p>
@@ -79,7 +108,7 @@ const Contact = () => {
                     </div>
                 </motion.div>
             </div>
-            </motion.section>
+        </motion.section>
     );
 };
 
