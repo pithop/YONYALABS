@@ -10,7 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 # On configure CORS de manière plus sécurisée pour la production à venir
-CORS(app, resources={r"/api/*": {"origins": ["https://yonyalabs.com", "http://localhost:3000"]}})
+CORS(app, resources={r"/api/*": {"origins": ["https://yonyalabs.com", "https://www.yonyalabs.com", "http://localhost:3000"]}})
 
 # Notre fonction pour créer le template HTML reste INCHANGÉE
 def create_confirmation_html(name):
