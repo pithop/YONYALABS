@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
+import Estimator from '../components/Estimator';
 import Portfolio from '../components/Portfolio';
 import Example from '../components/Example';
 import WhyMe from '../components/WhyMe';
@@ -16,6 +17,7 @@ const Home = () => {
             <main>
                 <Hero />
                 <Services />
+                <Estimator />
                 <Portfolio />
                 <Example />
                 <WhyMe />
