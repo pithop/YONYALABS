@@ -18,7 +18,7 @@ const services = {
       'Optimisation SEO de base incluse',
     ],
     cta: 'Choisir le pack Complet',
-    href: '/contact?pack=complet',
+    href: '/questionnaire?pack=complet',
   },
   'Pack Vitrine': {
     icon: Monitor,
@@ -33,7 +33,7 @@ const services = {
       'Performances de chargement optimisées',
     ],
     cta: 'Créer mon site vitrine',
-    href: '/contact?pack=vitrine',
+    href: '/questionnaire?pack=vitrine',
   },
   'Pack Sur Mesure': {
     icon: Wrench,
@@ -48,7 +48,7 @@ const services = {
       'Maintenance évolutive et support dédié',
     ],
     cta: 'Parler à un expert',
-    href: '/contact?pack=sur-mesure',
+    href: '/questionnaire?pack=sur-mesure',
   },
 };
 
