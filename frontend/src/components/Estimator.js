@@ -1,7 +1,7 @@
 // frontend/src/components/Estimator.js
 
 import React, { useState, useMemo } from 'react';
-import { Globe, ShoppingCart, Wrench } from 'lucide-react'; // Importer l'icône Wrench
+import { Globe, ShoppingCart, Wrench } from 'lucide-react';
 
 const Estimator = () => {
   const [averageBill, setAverageBill] = useState(35);
@@ -16,7 +16,7 @@ const Estimator = () => {
     const monthlyCovers = dailyCovers * 30;
     
     if (selectedPackage === 'vitrine') {
-      const newCovers = Math.round(monthlyCovers * 0.10); // 10% increase
+      const newCovers = Math.round(monthlyCovers * 0.10);
       const revenue = newCovers * averageBill;
       return {
         additionalRevenue: revenue,
@@ -28,13 +28,10 @@ const Estimator = () => {
     if (selectedPackage === 'complet') {
       const newCoversFromVisibility = Math.round(monthlyCovers * 0.10);
       const revenueFromVisibility = newCoversFromVisibility * averageBill;
-
       const onlineOrdersPerDay = 10;
       const onlineOrderBill = averageBill * 0.8;
       const revenueFromOnlineOrders = onlineOrdersPerDay * onlineOrderBill * 30;
-      
       const totalRevenue = revenueFromVisibility + revenueFromOnlineOrders;
-      
       return {
         additionalRevenue: totalRevenue,
         details: `Basé sur ~${newCoversFromVisibility} couverts de plus et ~${onlineOrdersPerDay * 30} commandes en ligne par mois.`,
@@ -44,7 +41,7 @@ const Estimator = () => {
     
     if (selectedPackage === 'sur-mesure') {
         return {
-            additionalRevenue: 0, // Pas de calcul chiffré
+            additionalRevenue: 0,
             details: 'Un logiciel sur mesure peut optimiser vos stocks, votre temps et votre rentabilité de manière unique.',
             isCustom: true,
         }
@@ -53,7 +50,34 @@ const Estimator = () => {
     return { additionalRevenue: 0, details: '', isCustom: false };
 
   }, [averageBill, dailyCovers, selectedPackage]);
+  
+  const packages = {
+    'vitrine': { label: 'Site Vitrine', icon: Globe },
+    'complet': { label: 'Site Complet', icon: ShoppingCart },
+    'sur-mesure': { label: 'Sur Mesure', icon: Wrench },
+  };
 
+  const ResultPanel = () => (
+    <div className="flex flex-col justify-center text-center bg-gray-900 p-6 sm:p-8 rounded-xl border border-gray-700 h-full">
+      {isCustom ? (
+          <>
+              <h4 className="text-xl sm:text-2xl font-bold text-white">Un projet unique, des gains uniques.</h4>
+              <p className="text-gray-400 mt-2 mb-6 text-sm sm:text-base">Discutons de vos besoins pour vous proposer une solution qui transforme votre restaurant.</p>
+              <a href="#contact" className="mt-auto inline-block bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300">
+                  Demander une analyse
+              </a>
+          </>
+      ) : (
+          <>
+              <p className="text-base sm:text-lg text-gray-400">Revenu mensuel additionnel</p>
+              <p className="text-4xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-blue-400 my-2 sm:my-3">
+              {formatCurrency(additionalRevenue)}
+              </p>
+              <p className="text-xs sm:text-sm text-gray-500 min-h-[40px]">{details}</p>
+          </>
+      )}
+    </div>
+  );
 
   return (
     <section className="bg-gray-900 text-white py-20 sm:py-32">
@@ -62,10 +86,10 @@ const Estimator = () => {
           Quel sera votre retour sur investissement ?
         </h2>
         <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
-          Entrez les chiffres actuels de votre restaurant et découvrez le revenu additionnel que nous pouvons générer pour vous.
+          Entrez vos chiffres actuels et découvrez le revenu additionnel que nous pouvons générer pour vous.
         </p>
 
-        <div className="mt-16 max-w-5xl mx-auto bg-gray-800 rounded-2xl p-8 md:p-12 shadow-2xl border border-gray-700">
+        <div className="mt-16 max-w-5xl mx-auto bg-gray-800 rounded-2xl p-6 sm:p-8 md:p-12 shadow-2xl border border-gray-700">
           
           <div className='mb-12'>
             <h3 className="text-xl font-semibold text-white mb-6">Étape 1 : Votre situation actuelle</h3>
@@ -96,55 +120,33 @@ const Estimator = () => {
           </div>
           
           <div>
-             <h3 className="text-xl font-semibold text-white mb-6">Étape 2 : Choisissez une solution pour simuler vos gains</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-              
+            <h3 className="text-xl font-semibold text-white mb-6">Étape 2 : Choisissez une solution pour simuler</h3>
+            
+            {/* --- LAYOUT DESKTOP (MD ET PLUS) --- */}
+            <div className="hidden md:grid grid-cols-2 gap-6 items-stretch">
               <div className="flex flex-col gap-4">
-                  {/* Vitrine */}
-                  <button onClick={() => setSelectedPackage('vitrine')} className={`p-5 text-left rounded-xl border-2 transition-all duration-300 flex items-start gap-4 ${selectedPackage === 'vitrine' ? 'bg-white/10 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-500'}`}>
-                      <div className="bg-orange-500/20 p-3 rounded-lg"><Globe className="w-6 h-6 text-orange-400" /></div>
-                      <div>
-                          <h4 className="font-bold text-lg">Site Vitrine</h4>
-                          <p className="text-sm text-gray-400">Attirez plus de clients en salle.</p>
-                      </div>
-                  </button>
-                  {/* Complet */}
-                  <button onClick={() => setSelectedPackage('complet')} className={`p-5 text-left rounded-xl border-2 transition-all duration-300 flex items-start gap-4 ${selectedPackage === 'complet' ? 'bg-white/10 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-500'}`}>
-                       <div className="bg-orange-500/20 p-3 rounded-lg"><ShoppingCart className="w-6 h-6 text-orange-400" /></div>
-                      <div>
-                          <h4 className="font-bold text-lg">Site Complet</h4>
-                          <p className="text-sm text-gray-400">Créez une nouvelle source de revenus.</p>
-                      </div>
-                  </button>
-                  {/* Sur Mesure */}
-                  <button onClick={() => setSelectedPackage('sur-mesure')} className={`p-5 text-left rounded-xl border-2 transition-all duration-300 flex items-start gap-4 ${selectedPackage === 'sur-mesure' ? 'bg-white/10 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-500'}`}>
-                       <div className="bg-orange-500/20 p-3 rounded-lg"><Wrench className="w-6 h-6 text-orange-400" /></div>
-                      <div>
-                          <h4 className="font-bold text-lg">Développement Sur Mesure</h4>
-                          <p className="text-sm text-gray-400">Optimisez votre gestion et vos opérations.</p>
-                      </div>
-                  </button>
+                  {Object.entries(packages).map(([key, { label, icon: Icon }]) => (
+                    <button key={key} onClick={() => setSelectedPackage(key)} className={`p-5 text-left rounded-xl border-2 transition-all duration-300 flex items-start gap-4 ${selectedPackage === key ? 'bg-white/10 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-500'}`}>
+                        <div className="bg-orange-500/20 p-3 rounded-lg"><Icon className="w-6 h-6 text-orange-400" /></div>
+                        <div>
+                            <h4 className="font-bold text-lg">{label}</h4>
+                        </div>
+                    </button>
+                  ))}
               </div>
+              <ResultPanel />
+            </div>
 
-              <div className="flex flex-col justify-center text-center bg-gray-900 p-8 rounded-xl border border-gray-700">
-                {isCustom ? (
-                    <>
-                        <h4 className="text-2xl font-bold text-white">Un projet unique, des gains uniques.</h4>
-                        <p className="text-gray-400 mt-2 mb-6">Discutons de vos besoins pour vous proposer une solution qui transforme votre restaurant.</p>
-                        <a href="#contact" className="mt-auto inline-block bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                            Demander une analyse
-                        </a>
-                    </>
-                ) : (
-                    <>
-                        <p className="text-lg text-gray-400">Revenu mensuel additionnel</p>
-                        <p className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-blue-400 my-3">
-                        {formatCurrency(additionalRevenue)}
-                        </p>
-                        <p className="text-sm text-gray-500 min-h-[40px]">{details}</p>
-                    </>
-                )}
+            {/* --- LAYOUT MOBILE (EN DESSOUS DE MD) --- */}
+            <div className="block md:hidden">
+              <div className="flex justify-center p-1 bg-gray-900 rounded-lg mb-4">
+                  {Object.entries(packages).map(([key, { label }]) => (
+                     <button key={key} onClick={() => setSelectedPackage(key)} className={`w-full px-2 py-2.5 text-sm font-semibold rounded-md transition-colors duration-300 ${selectedPackage === key ? 'bg-orange-500 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>
+                        {label}
+                     </button>
+                  ))}
               </div>
+              <ResultPanel />
             </div>
           </div>
         </div>
