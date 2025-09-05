@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Importation du composant Link
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, Package, Monitor, Wrench } from 'lucide-react';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -6,7 +7,7 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 const services = {
   'Pack Complet': {
     icon: Package,
-    title: 'Pack Complet — à partir de 900€', // Mise à jour du prix
+    title: 'Pack Complet — à partir de 900€',
     description:
       "La solution tout-en-un pour attirer plus de clients : visibilité Google, réservation et commande en ligne.",
     features: [
@@ -21,7 +22,7 @@ const services = {
   },
   'Pack Vitrine': {
     icon: Monitor,
-    title: 'Pack Vitrine — à partir de 500€', // Mise à jour du prix
+    title: 'Pack Vitrine — à partir de 500€',
     description:
       "Idéal pour démarrer : présentez votre établissement, votre menu et vos informations clés avec style.",
     features: [
@@ -123,12 +124,13 @@ const Services = () => {
                 </ul>
               </div>
               <div className="text-center md:text-right">
-                <a
-                  href={selectedService.href}
+                {/* Remplacement de <a> par <Link> */}
+                <Link
+                  to={selectedService.href}
                   className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-transform duration-200 bg-turquoise rounded-lg shadow-lg hover:bg-teal hover:scale-105 focus:outline-none focus:ring-2 focus:ring-turquoise/40"
                 >
                   {selectedService.cta}
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
