@@ -4,14 +4,18 @@ import { motion } from 'framer-motion';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import mitakeImg from '../assets/portfolio/mitake-ramen.webp';
+import mamieImg from '../assets/portfolio/mamie-couscous.webp';
 
 const demos = [
-  { name: "Atipico",category: "Site Vitrine", url: "https://atipico-five.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755771000/screencapture-atipico-five-vercel-app-2025-08-21-12_08_10_m4zamo.png" },
-  { name: "L'Indya",category: "Site Vitrine", url: "https://l-indya.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-l-indya-vercel-app-2025-08-21-12_08_32_lkbaie.png" },
-  { name: "A la Braise",category: "Site Vitrine", url: "https://alabraise.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-alabraise-vercel-app-2025-08-21-12_08_46_gc5o72.png" },
-  { name: "La Pizzaterie",category: "Site Vitrine", url: "https://lapizzaterie.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-lapizzaterie-vercel-app-2025-08-21-12_08_58_rq9dpg.png" },
-  { name: "Le P'tit Thaï",category: "Site Vitrine", url: "https://leptitthai.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770998/screencapture-leptitthai-vercel-app-2025-08-21-12_09_10_gnk0ja.png" },
-  { name: "L'AKAGERA GRENOBLE",category: "Site Vitrine", url: "https://dev-lakagera.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755772914/screencapture-dev-lakagera-vercel-app-fr-2025-08-21-12_41_34_vajewq.png" }
+  { name: "Mitake Ramen", category: "Site Vitrine", url: "https://www.mitakeramen.page/", imageUrl: mitakeImg },
+  { name: "Mamie Couscous", category: "Site Vitrine", url: "https://mamie-couscous.vercel.app/", imageUrl: mamieImg },
+  { name: "Atipico", category: "Site Vitrine", url: "https://atipico-five.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755771000/screencapture-atipico-five-vercel-app-2025-08-21-12_08_10_m4zamo.png" },
+  { name: "L'Indya", category: "Site Vitrine", url: "https://l-indya.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-l-indya-vercel-app-2025-08-21-12_08_32_lkbaie.png" },
+  { name: "A la Braise", category: "Site Vitrine", url: "https://alabraise.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-alabraise-vercel-app-2025-08-21-12_08_46_gc5o72.png" },
+  { name: "La Pizzaterie", category: "Site Vitrine", url: "https://lapizzaterie.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770999/screencapture-lapizzaterie-vercel-app-2025-08-21-12_08_58_rq9dpg.png" },
+  { name: "Le P'tit Thaï", category: "Site Vitrine", url: "https://leptitthai.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755770998/screencapture-leptitthai-vercel-app-2025-08-21-12_09_10_gnk0ja.png" },
+  { name: "L'AKAGERA GRENOBLE", category: "Site Vitrine", url: "https://dev-lakagera.vercel.app/", imageUrl: "https://res.cloudinary.com/dggbfnfdl/image/upload/v1755772914/screencapture-dev-lakagera-vercel-app-fr-2025-08-21-12_41_34_vajewq.png" }
 ];
 
 const Portfolio = () => {
