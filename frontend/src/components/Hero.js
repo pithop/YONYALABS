@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Zap, Smartphone, Search } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -45,9 +46,18 @@ const Hero = () => {
         </motion.div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-white/70">
-          <span>⚡ Mise en ligne en quelques jours</span>
-          <span>📱 100% mobile</span>
-          <span>🔎 SEO optimisé</span>
+          <span className="inline-flex items-center gap-2">
+            <Zap className="w-4 h-4 text-turquoise" />
+            Mise en ligne en quelques jours
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <Smartphone className="w-4 h-4 text-turquoise" />
+            100% mobile
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <Search className="w-4 h-4 text-turquoise" />
+            SEO optimisé
+          </span>
         </div>
       </div>
     </section>
