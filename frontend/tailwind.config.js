@@ -39,13 +39,25 @@ module.exports = {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
                 },
-                // AJOUT : Couleurs spécifiques du design system
+                // AJOUT : Couleurs spécifiques du design system YonYa Labs
                 'turquoise': '#1CC5B7',
+                'turquoise-light': '#5EEAD4',
                 'teal': '#0AA79A', // Hover
                 'dark-navy': '#0B132B',
-                'light-gray': '#F5F5F7',
-                'fresh-green': '#28A745',
+                'navy-darker': '#060A17',
+                'navy-card': '#101B3B',
+                'navy-card-hover': '#16244C',
+                'light-gray': '#F8FAFC',
+                'fresh-green': '#10B981',
                 'warm-yellow': '#FFD54F',
+                'gold': '#F59E0B',
+                'gold-light': '#FCD34D',
+            },
+            boxShadow: {
+                'glow-turquoise': '0 0 35px -5px rgba(28, 197, 183, 0.25)',
+                'glow-gold': '0 0 30px -5px rgba(245, 158, 11, 0.25)',
+                'card-premium': '0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04)',
+                'card-dark': '0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
             },
             borderRadius: {
                 lg: 'var(--radius)',

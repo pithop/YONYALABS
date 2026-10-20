@@ -18,7 +18,7 @@ CORS(app)
 def create_confirmation_html(name):
     """Génère le HTML pour l'email de confirmation de marque avec un design amélioré."""
     # URL de notre site (à adapter si nécessaire)
-    website_url = "https://yonyalabs.com" 
+    website_url = "https://yonyalabs.fr" 
     
     return f"""
     <!DOCTYPE html>
@@ -146,7 +146,7 @@ def handle_contact():
             
             # 1. Préparer l'email de notification pour nous
             msg_to_us = EmailMessage()
-            msg_to_us['Subject'] = f"Nouveau message de {name} via yonyalabs.com"
+            msg_to_us['Subject'] = f"Nouveau message de {name} via yonyalabs.fr"
             msg_to_us['From'] = sender_email
             msg_to_us['To'] = recipient_email
             msg_to_us.set_content(f'Nom: {name}\nEmail: {email_client}\n\nMessage:\n{message_content}')

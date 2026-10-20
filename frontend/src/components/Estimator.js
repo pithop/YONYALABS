@@ -1,157 +1,275 @@
-// frontend/src/components/Estimator.js
-
 import React, { useState, useMemo } from 'react';
-import { Globe, ShoppingCart, Wrench } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Calculator, Globe, ShoppingBag, Sparkles, ArrowRight, TrendingUp, DollarSign } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 const Estimator = () => {
   const [averageBill, setAverageBill] = useState(35);
-  const [dailyCovers, setDailyCovers] = useState(50);
-  const [selectedPackage, setSelectedPackage] = useState('complet'); // 'vitrine', 'complet', or 'sur-mesure'
+  const [dailyCovers, setDailyCovers] = useState(60);
+  const [selectedPackage, setSelectedPackage] = useState('complet');
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
   };
 
-  const { additionalRevenue, details, isCustom } = useMemo(() => {
+  const { additionalMonthly, savedCommissions, annualImpact, details, isCustom } = useMemo(() => {
     const monthlyCovers = dailyCovers * 30;
-    
+    const monthlyTurnover = monthlyCovers * averageBill;
+
     if (selectedPackage === 'vitrine') {
-      const newCovers = Math.round(monthlyCovers * 0.10);
-      const revenue = newCovers * averageBill;
+      const extraCovers = Math.round(monthlyCovers * 0.10);
+      const extraRevenue = extraCovers * averageBill;
       return {
-        additionalRevenue: revenue,
-        details: `Basé sur ~${newCovers} couverts en plus par mois grâce à une meilleure visibilité.`,
+        additionalMonthly: extraRevenue,
+        savedCommissions: 0,
+        annualImpact: extraRevenue * 12,
+        details: `Basé sur +10% de réservations grâce au référencement Google Maps et à l'image de marque (env. ${extraCovers} couverts/mois).`,
         isCustom: false,
       };
     }
 
     if (selectedPackage === 'complet') {
-      const newCoversFromVisibility = Math.round(monthlyCovers * 0.10);
-      const revenueFromVisibility = newCoversFromVisibility * averageBill;
-      const onlineOrdersPerDay = 10;
-      const onlineOrderBill = averageBill * 0.8;
-      const revenueFromOnlineOrders = onlineOrdersPerDay * onlineOrderBill * 30;
-      const totalRevenue = revenueFromVisibility + revenueFromOnlineOrders;
+      const extraCovers = Math.round(monthlyCovers * 0.15);
+      const revenueFromCovers = extraCovers * averageBill;
+      // Estimation de 12 commandes directes par jour à 80% du panier moyen
+      const directOrdersPerMonth = 12 * 30;
+      const directOrderValue = averageBill * 0.85;
+      const directOrdersRevenue = directOrdersPerMonth * directOrderValue;
+      // 25% de commission sauvée par rapport à Deliveroo/Uber Eats sur ces commandes
+      const commissionSaved = directOrdersRevenue * 0.25;
+      const totalAdditional = revenueFromCovers + directOrdersRevenue;
+
       return {
-        additionalRevenue: totalRevenue,
-        details: `Basé sur ~${newCoversFromVisibility} couverts de plus et ~${onlineOrdersPerDay * 30} commandes en ligne par mois.`,
+        additionalMonthly: totalAdditional,
+        savedCommissions: commissionSaved,
+        annualImpact: (totalAdditional + commissionSaved) * 12,
+        details: `Inclut +${extraCovers} couverts/mois et 360 commandes directes Click & Collect sans passer par Uber Eats.`,
         isCustom: false,
       };
     }
-    
-    if (selectedPackage === 'sur-mesure') {
-        return {
-            additionalRevenue: 0,
-            details: 'Un logiciel sur mesure peut optimiser vos stocks, votre temps et votre rentabilité de manière unique.',
-            isCustom: true,
-        }
-    }
 
-    return { additionalRevenue: 0, details: '', isCustom: false };
-
+    return {
+      additionalMonthly: 0,
+      savedCommissions: 0,
+      annualImpact: 0,
+      details: 'Architecture complexe, intégration caisse et multi-établissements. Étude de ROI sur mesure.',
+      isCustom: true,
+    };
   }, [averageBill, dailyCovers, selectedPackage]);
-  
-  const packages = {
-    'vitrine': { label: 'Site Vitrine', icon: Globe },
-    'complet': { label: 'Site Complet', icon: ShoppingCart },
-    'sur-mesure': { label: 'Sur Mesure', icon: Wrench },
+
+  const packages = [
+    {
+      id: 'vitrine',
+      label: 'Pack Vitrine (500 €)',
+      sub: 'Visibilité & Réservations',
+      icon: Globe,
+    },
+    {
+      id: 'complet',
+      label: 'Pack Complet (900 €)',
+      sub: 'Click & Collect + 0% Commission',
+      icon: ShoppingBag,
+    },
+    {
+      id: 'sur-mesure',
+      label: 'Sur Mesure',
+      sub: 'Multi-sites & Intégration Caisse',
+      icon: Sparkles,
+    },
+  ];
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
   };
 
-  const ResultPanel = () => (
-    <div className="flex flex-col justify-center text-center bg-gray-900 p-6 sm:p-8 rounded-xl border border-gray-700 h-full">
-      {isCustom ? (
-          <>
-              <h4 className="text-xl sm:text-2xl font-bold text-white">Un projet unique, des gains uniques.</h4>
-              <p className="text-gray-400 mt-2 mb-6 text-sm sm:text-base">Discutons de vos besoins pour vous proposer une solution qui transforme votre restaurant.</p>
-              <a href="#contact" className="mt-auto inline-block bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300">
-                  Demander une analyse
-              </a>
-          </>
-      ) : (
-          <>
-              <p className="text-base sm:text-lg text-gray-400">Revenu mensuel additionnel</p>
-              <p className="text-4xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-blue-400 my-2 sm:my-3">
-              {formatCurrency(additionalRevenue)}
-              </p>
-              <p className="text-xs sm:text-sm text-gray-500 min-h-[40px]">{details}</p>
-          </>
-      )}
-    </div>
-  );
-
   return (
-    <section className="bg-gray-900 text-white py-20 sm:py-32">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-          Quel sera votre retour sur investissement ?
-        </h2>
-        <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
-          Entrez vos chiffres actuels et découvrez le revenu additionnel que nous pouvons générer pour vous.
-        </p>
-
-        <div className="mt-16 max-w-5xl mx-auto bg-gray-800 rounded-2xl p-6 sm:p-8 md:p-12 shadow-2xl border border-gray-700">
-          
-          <div className='mb-12'>
-            <h3 className="text-xl font-semibold text-white mb-6">Étape 1 : Votre situation actuelle</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label htmlFor="averageBill" className="font-medium text-gray-300">Votre addition moyenne</label>
-                  <span className="text-xl font-semibold text-white bg-gray-700 px-3 py-1 rounded-md">{formatCurrency(averageBill)}</span>
-                </div>
-                <input
-                  type="range" id="averageBill" min="15" max="150" value={averageBill}
-                  onChange={(e) => setAverageBill(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer range-slider"
-                />
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label htmlFor="dailyCovers" className="font-medium text-gray-300">Vos couverts par jour</label>
-                  <span className="text-xl font-semibold text-white bg-gray-700 px-3 py-1 rounded-md">{dailyCovers}</span>
-                </div>
-                <input
-                  type="range" id="dailyCovers" min="10" max="400" value={dailyCovers}
-                  onChange={(e) => setDailyCovers(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer range-slider"
-                />
-              </div>
-            </div>
+    <motion.section
+      id="estimator"
+      ref={ref}
+      variants={sectionVariants}
+      initial="hidden"
+      animate={isVisible ? 'visible' : 'hidden'}
+      className="py-20 md:py-28 bg-[#0B132B] text-white relative overflow-hidden"
+    >
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-turquoise text-xs md:text-sm font-semibold tracking-wide uppercase mb-4">
+            <Calculator className="w-4 h-4 text-turquoise" />
+            Simulateur de Rentabilité
           </div>
-          
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-6">Étape 2 : Choisissez une solution pour simuler</h3>
-            
-            {/* --- LAYOUT DESKTOP (MD ET PLUS) --- */}
-            <div className="hidden md:grid grid-cols-2 gap-6 items-stretch">
-              <div className="flex flex-col gap-4">
-                  {Object.entries(packages).map(([key, { label, icon: Icon }]) => (
-                    <button key={key} onClick={() => setSelectedPackage(key)} className={`p-5 text-left rounded-xl border-2 transition-all duration-300 flex items-start gap-4 ${selectedPackage === key ? 'bg-white/10 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-500'}`}>
-                        <div className="bg-orange-500/20 p-3 rounded-lg"><Icon className="w-6 h-6 text-orange-400" /></div>
-                        <div>
-                            <h4 className="font-bold text-lg">{label}</h4>
-                        </div>
-                    </button>
-                  ))}
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+            Combien va vous rapporter <span className="text-gradient-turquoise">votre nouveau site</span> ?
+          </h2>
+          <p className="mt-4 text-white/70 text-base md:text-lg max-w-2xl mx-auto">
+            Ajustez vos chiffres et visualisez concrètement votre retour sur investissement immédiat.
+          </p>
+        </div>
+
+        <div className="bg-[#111936] rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Colonne Contrôles */}
+            <div className="lg:col-span-7 space-y-8">
+              {/* Sliders */}
+              <div className="space-y-6">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label htmlFor="averageBill" className="text-sm sm:text-base font-semibold text-white/90">
+                      Ticket moyen par client
+                    </label>
+                    <span className="text-base sm:text-lg font-bold text-turquoise bg-white/5 px-3 py-1 rounded-lg border border-white/10">
+                      {formatCurrency(averageBill)}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    id="averageBill"
+                    min="15"
+                    max="150"
+                    step="1"
+                    value={averageBill}
+                    onChange={(e) => setAverageBill(Number(e.target.value))}
+                    className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#1CC5B7]"
+                  />
+                  <div className="flex justify-between text-xs text-white/40 mt-1">
+                    <span>15 €</span>
+                    <span>80 €</span>
+                    <span>150 €</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label htmlFor="dailyCovers" className="text-sm sm:text-base font-semibold text-white/90">
+                      Couverts servis par jour
+                    </label>
+                    <span className="text-base sm:text-lg font-bold text-turquoise bg-white/5 px-3 py-1 rounded-lg border border-white/10">
+                      {dailyCovers} couverts / jour
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    id="dailyCovers"
+                    min="10"
+                    max="300"
+                    step="5"
+                    value={dailyCovers}
+                    onChange={(e) => setDailyCovers(Number(e.target.value))}
+                    className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#1CC5B7]"
+                  />
+                  <div className="flex justify-between text-xs text-white/40 mt-1">
+                    <span>10 cvts</span>
+                    <span>150 cvts</span>
+                    <span>300 cvts</span>
+                  </div>
+                </div>
               </div>
-              <ResultPanel />
+
+              {/* Sélection Pack */}
+              <div>
+                <p className="text-sm font-semibold text-white/90 mb-3">Sélectionnez la formule à simuler :</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {packages.map((pkg) => {
+                    const Icon = pkg.icon;
+                    const isSelected = selectedPackage === pkg.id;
+                    return (
+                      <button
+                        key={pkg.id}
+                        type="button"
+                        onClick={() => setSelectedPackage(pkg.id)}
+                        className={`p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+                          isSelected
+                            ? 'bg-turquoise/15 border-turquoise text-white shadow-glow-turquoise'
+                            : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/[0.08] hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <Icon className={`w-4 h-4 ${isSelected ? 'text-turquoise' : 'text-white/60'}`} />
+                          <span className="text-xs font-bold text-white">{pkg.label}</span>
+                        </div>
+                        <span className="text-[11px] text-white/50">{pkg.sub}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            {/* --- LAYOUT MOBILE (EN DESSOUS DE MD) --- */}
-            <div className="block md:hidden">
-              <div className="flex justify-center p-1 bg-gray-900 rounded-lg mb-4">
-                  {Object.entries(packages).map(([key, { label }]) => (
-                     <button key={key} onClick={() => setSelectedPackage(key)} className={`w-full px-2 py-2.5 text-sm font-semibold rounded-md transition-colors duration-300 ${selectedPackage === key ? 'bg-orange-500 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>
-                        {label}
-                     </button>
-                  ))}
-              </div>
-              <ResultPanel />
+            {/* Colonne Résultats ROI */}
+            <div className="lg:col-span-5 bg-gradient-to-b from-[#060A17] to-[#0B132B] p-6 sm:p-8 rounded-2xl border border-white/15 shadow-xl flex flex-col justify-between">
+              {isCustom ? (
+                <div className="text-center py-6">
+                  <Sparkles className="w-12 h-12 text-turquoise mx-auto mb-4" />
+                  <h4 className="text-xl font-bold text-white mb-2">Projet Personnalisé</h4>
+                  <p className="text-sm text-white/70 mb-6">
+                    Multi-adresses, synchronisation caisse ou Click & Collect de masse : nous bâtissons une solution sur mesure à forte rentabilité.
+                  </p>
+                  <Link
+                    to="/questionnaire?pack=sur-mesure"
+                    className="inline-flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl font-bold text-white bg-turquoise hover:bg-teal transition-all"
+                  >
+                    <span>Demander une étude personnalisée</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-xs uppercase tracking-wider text-white/60 font-semibold block mb-1">
+                      Revenu additionnel estimé
+                    </span>
+                    <p className="text-4xl sm:text-5xl font-black text-gradient-turquoise">
+                      +{formatCurrency(additionalMonthly)} <span className="text-sm font-semibold text-white/60">/ mois</span>
+                    </p>
+                    <p className="text-xs text-white/60 mt-2">{details}</p>
+                  </div>
+
+                  {savedCommissions > 0 && (
+                    <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-1">
+                        <TrendingUp className="w-4 h-4" />
+                        <span>Commissions plateformes économisées</span>
+                      </div>
+                      <p className="text-2xl font-black text-emerald-400">
+                        ~{formatCurrency(savedCommissions)} <span className="text-xs font-medium text-emerald-300">/ mois</span>
+                      </p>
+                      <p className="text-[11px] text-white/60 mt-1">
+                        Argent qui reste 100% dans votre poche au lieu d'aller à Uber Eats.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                    <div>
+                      <span className="text-[11px] text-white/50 block">Impact annuel estimé</span>
+                      <span className="text-lg font-bold text-amber-400">+{formatCurrency(annualImpact)} / an</span>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-turquoise/20 text-turquoise text-xs font-bold">
+                      Rentabilisé en &lt; 15 jours
+                    </span>
+                  </div>
+
+                  <Link
+                    to={`/questionnaire?pack=${selectedPackage}`}
+                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-white bg-turquoise hover:bg-teal transition-all shadow-lg hover:scale-[1.02]"
+                  >
+                    <span>Valider mon pack & lancer mon projet</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
