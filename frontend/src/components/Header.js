@@ -10,9 +10,10 @@ const Header = () => {
 
   const navLinks = [
     { href: '/#services', text: 'Services' },
-    { href: '/#estimator', text: 'Simulateur' },
+    { href: '/#simulator', text: 'Simulateur' },
     { href: '/#portfolio', text: 'Portfolio' },
     { href: '/#example', text: 'Performances' },
+    { href: '/#geo-presence', text: 'SEO & Maps' },
     { href: '/#process', text: 'Méthode' },
     { href: '/#testimonials', text: 'Avis' },
     { href: '/#faq', text: 'FAQ' },

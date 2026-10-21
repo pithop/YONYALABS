@@ -9,13 +9,13 @@ const Footer = () => {
 
   const navLinks = [
     { href: '/#services', text: 'Nos Formules & Tarifs' },
-    { href: '/#estimator', text: 'Simulateur de Gain ROI' },
+    { href: '/#simulator', text: 'Simulateur de Gain ROI' },
     { href: '/#portfolio', text: 'Nos Réalisations' },
     { href: '/#example', text: 'Audit de Performances' },
+    { href: '/#geo-presence', text: 'SEO Local & Google Maps' },
     { href: '/#process', text: 'Notre Méthode en 7 Jours' },
     { href: '/#testimonials', text: 'Avis Restaurateurs' },
     { href: '/#faq', text: 'Questions Fréquentes' },
-    { href: '/#contact', text: 'Nous Contacter' },
   ];
 
   const handleNavClick = (e, href) => {
